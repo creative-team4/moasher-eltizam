@@ -2,20 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>هاكثون أبشر طويق - مؤشر التزامك</title>
+  <title>مؤشر التزامك - هاكثون أبشر طويق</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       --primary: #005c8f;
       --primary-soft: #e0f2fe;
       --bg: #0f172a;
-      --bg-page: #f3f4f6;
       --card-bg: #ffffff;
       --border: #e5e7eb;
       --text-main: #0f172a;
       --text-sub: #6b7280;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.28);
-      --radius-lg: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.25);
+      --radius-lg: 20px;
     }
     * {
       box-sizing: border-box;
@@ -23,9 +22,10 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0b1120 0, #020617 40%, #000 100%);
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
       color: var(--text-main);
     }
+
     /* ===== Header ===== */
     header {
       position: sticky;
@@ -38,67 +38,63 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: #e5e7eb;
     }
-    header .logo {
+    .header-left {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    header .logo span.icon {
-      width: 36px;
-      height: 36px;
+    .header-icon {
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #38bdf8, #0ea5e9 40%, #0369a1 80%);
+      background: radial-gradient(circle at 30% 0, #22c55e, #16a34a 40%, #15803d 80%);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 0 0 2px #0b1120, 0 0 25px rgba(56, 189, 248, 0.6);
+      font-size: 18px;
+      box-shadow: 0 0 0 2px #020617, 0 0 24px rgba(34, 197, 94, 0.7);
     }
-    header .logo-text-main {
+    .header-title-main {
       font-weight: 700;
       font-size: 18px;
-      color: #e5f3ff;
     }
-    header .logo-text-sub {
+    .header-title-sub {
       font-size: 11px;
       color: #9ca3af;
     }
-    header .user {
-      text-align: left;
+    .header-right a {
       font-size: 13px;
-      color: #e5e7eb;
+      color: #bfdbfe;
+      text-decoration: none;
     }
-    header .user .name {
-      font-weight: 600;
-    }
-    header .user .role {
-      font-size: 11px;
-      color: #9ca3af;
+    .header-right a:hover {
+      text-decoration: underline;
     }
 
-    /* ===== Main wrapper card ===== */
+    /* ===== Page shell & main card ===== */
     .page-shell {
       max-width: 1120px;
       margin: 26px auto 40px;
       padding: 0 16px 40px;
     }
     .page-card {
-      background: radial-gradient(circle at top left, #eff6ff 0, #ffffff 45%, #e5e7eb 100%);
+      background: radial-gradient(circle at top left, #eef2ff 0, #ffffff 45%, #e5e7eb 100%);
       border-radius: 22px;
-      padding: 22px 22px 26px;
+      padding: 20px 22px 24px;
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.5);
       position: relative;
       overflow: hidden;
     }
     .page-card::before {
       content: "";
       position: absolute;
-      inset-inline-end: -120px;
-      inset-block-start: -120px;
-      width: 260px;
-      height: 260px;
+      inset-inline-end: -110px;
+      inset-block-start: -110px;
+      width: 240px;
+      height: 240px;
       background: radial-gradient(circle, rgba(56,189,248,0.3), transparent 70%);
       opacity: 0.9;
       pointer-events: none;
@@ -106,124 +102,146 @@
     .page-card::after {
       content: "";
       position: absolute;
-      inset-inline-start: -140px;
-      inset-block-end: -140px;
-      width: 280px;
-      height: 280px;
+      inset-inline-start: -120px;
+      inset-block-end: -120px;
+      width: 260px;
+      height: 260px;
       background: radial-gradient(circle, rgba(45,212,191,0.25), transparent 70%);
       opacity: 0.9;
       pointer-events: none;
     }
 
     .page-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
       position: relative;
       z-index: 1;
       margin-bottom: 18px;
     }
-    .titles {
-      max-width: 64%;
-    }
     .page-title {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 700;
+      margin-bottom: 6px;
       color: #0f172a;
-      margin-bottom: 4px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
-    .page-title span.badge-main {
-      font-size: 12px;
-      padding: 3px 10px;
+    .page-badge {
+      font-size: 11px;
+      padding: 3px 9px;
       border-radius: 999px;
       background: #0f172a;
       color: #e5e7eb;
     }
-    .subtitle {
+    .page-subtitle {
       font-size: 14px;
       color: var(--text-sub);
-      line-height: 1.7;
-    }
-    .cta-box {
-      text-align: left;
-    }
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      padding: 9px 18px;
-      border: none;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      color: #f9fafb;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.45);
-      text-decoration: none;
-      transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
-    }
-    .cta-btn span.icon {
-      font-size: 15px;
-    }
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.55);
-    }
-    .cta-caption {
-      font-size: 11px;
-      color: #4b5563;
-      margin-top: 6px;
+      line-height: 1.8;
+      max-width: 90%;
     }
 
-    /* ===== Hero layout ===== */
-    .hero {
+    /* ===== Layout: tips + gauge ===== */
+    .layout {
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.4fr);
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.4fr);
       gap: 18px;
-      margin-bottom: 22px;
     }
     @media (max-width: 900px) {
-      .titles { max-width: 100%; }
-      .hero {
-        grid-template-columns: 1fr;
-      }
+      .page-subtitle { max-width: 100%; }
+      .layout { grid-template-columns: 1fr; }
     }
 
-    .hero-card {
-      background: rgba(255, 255, 255, 0.96);
+    .card {
+      background: rgba(255, 255, 255, 0.97);
       border-radius: 18px;
-      padding: 14px 16px 16px;
-      border: 1px solid #e5e7eb;
+      padding: 16px 16px 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
     }
-    .hero-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
+    .card h2 {
+      font-size: 16px;
+      margin: 0 0 6px;
+      color: #111827;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .hero-title span.emoji {
-      font-size: 18px;
+    .card h2 span.icon {
+      font-size: 17px;
     }
-    .hero-text {
+    .card small {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* ===== Gauge ===== */
+    .gauge-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0 8px;
+    }
+    .gauge {
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: conic-gradient(#16a34a 0 280deg, #e5e7eb 280deg 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .gauge-inner {
+      width: 135px;
+      height: 135px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px #e5e7eb;
+    }
+    .gauge-score {
+      font-size: 30px;
+      font-weight: 700;
+      color: #16a34a;
+    }
+    .gauge-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    .gauge-status {
+      text-align: center;
       font-size: 13px;
-      color: var(--text-sub);
-      line-height: 1.8;
+      color: #374151;
+      margin-top: 6px;
+      line-height: 1.6;
     }
-    .hero-pills {
+    .gauge-legend {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      margin-left: 4px;
+    }
+    .dot.green { background: #16a34a; }
+    .dot.yellow { background: #f59e0b; }
+    .dot.red { background: #ef4444; }
+
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
       margin-top: 10px;
       font-size: 11px;
     }
@@ -236,133 +254,81 @@
       align-items: center;
       gap: 5px;
     }
-    .pill span.dot {
+    .pill span.circle {
       width: 7px;
       height: 7px;
       border-radius: 999px;
       background: #22c55e;
     }
 
-    .hero-side {
-      background: rgba(15, 23, 42, 0.95);
-      color: #e5e7eb;
-      border-radius: 18px;
-      padding: 14px 16px 16px;
-      border: 1px solid #1f2937;
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
     }
-    .hero-side-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .metric-card {
+      border-radius: 12px;
+      padding: 10px 11px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
     }
-    .hero-side-title span.icon {
-      font-size: 16px;
-    }
-    .hero-side p {
+    .metric-title {
       font-size: 12px;
-      color: #cbd5f5;
-      line-height: 1.7;
+      color: #4b5563;
+      margin-bottom: 2px;
     }
-    .hero-side ul {
+    .metric-value {
+      font-size: 18px;
+      font-weight: 650;
+      margin-bottom: 2px;
+    }
+    .metric-note {
+      font-size: 11px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    /* ===== Tips & future ===== */
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .tip {
+      border-radius: 12px;
+      padding: 10px 11px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      font-size: 13px;
+      color: #1f2937;
+    }
+    .tip-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+    .tip-tag {
+      font-size: 11px;
+      color: #2563eb;
+      margin-right: 4px;
+    }
+
+    .timeline {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .timeline strong {
+      color: #111827;
+    }
+    .timeline ul {
       margin: 6px 0 0;
       padding-right: 18px;
-      font-size: 12px;
     }
-    .hero-side li {
+    .timeline li {
       margin-bottom: 4px;
-    }
-
-    /* ===== Services grid ===== */
-    .section-heading {
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      color: #111827;
-    }
-    .section-heading span.line {
-      flex-grow: 1;
-      height: 1px;
-      background: #e5e7eb;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 14px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.98);
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease,
-                  background 0.12s ease;
-      position: relative;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
-      border-color: #cbd5f5;
-    }
-    .card .label {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-bottom: 4px;
-    }
-    .card .title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card .title span.icon {
-      font-size: 16px;
-    }
-    .card .desc {
-      font-size: 13px;
-      color: var(--text-sub);
-      line-height: 1.7;
-    }
-
-    a.card-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .card.new-service {
-      border: 1px solid #bfdbfe;
-      background: linear-gradient(135deg, #e0f2fe, #eef2ff);
-      overflow: hidden;
-    }
-    .card.new-service::before {
-      content: "خدمة مقترحة";
-      position: absolute;
-      inset-inline-start: 12px;
-      inset-block-start: 11px;
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: #1d4ed8;
-      color: #f9fafb;
-      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.4);
-    }
-    .card.new-service:hover {
-      background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-      border-color: #60a5fa;
-    }
-    .card.new-service .title {
-      margin-top: 16px;
     }
 
     .footer-note {
@@ -375,144 +341,25 @@
 </head>
 <body>
   <header>
-    <div class="logo">
-      <span class="icon"></span>
+    <div class="header-left">
+      <div class="header-icon"></div>
       <div>
-        <div class="logo-text-main">هاكثون أبشر طويق</div>
-        <div class="logo-text-sub">نموذج واجهة لخدمة "مؤشر التزامك"</div>
+        <div class="header-title-main">مؤشر التزامك</div>
+        <div class="header-title-sub">مدرب التزام رقمي ضمن تصوّر هاكثون أبشر طويق</div>
       </div>
     </div>
-    <div class="user">
-      <div class="name">Creative</div>
-      <div class="role">مشارك في الهاكثون</div>
+    <div class="header-right">
+      <!-- التعديل هنا فقط -->
+      <a href="index.html">الرجوع للصفحة الرئيسية</a>
     </div>
   </header>
 
   <div class="page-shell">
     <div class="page-card">
       <div class="page-header">
-        <div class="titles">
-          <div class="page-title">
-            قائمة الخدمات
-            <span class="badge-main">تصوّر واجهة تجريبية</span>
-          </div>
-          <div class="subtitle">
-            هذه الصفحة تُظهر كيف يمكن إضافة خدمة <strong>مؤشر التزامك</strong> داخل منصة حكومية مثل أبشر،
-            بحيث تتحول المنصّة من تنفيذ طلبات فقط إلى مدرب رقمي يساعد المستخدم على فهم مستوى التزامه
-            وتحسين تجربته مع المواعيد، الوثائق، والمخالفات.
-          </div>
+        <div class="page-title">
+          لوحة مؤشر التزامك العام
+          <span class="page-badge">نموذج واجهة تجريبية</span>
         </div>
-        <div class="cta-box">
-          <!-- التعديل هنا: أزلت الـ / من بداية الرابط -->
-          <a href="iltizamk.html" class="cta-btn">
-            <span class="icon"></span>
-            <span>جرّب واجهة مؤشر التزامك الآن</span>
-          </a>
-          <div class="cta-caption">
-            ينقلك إلى صفحة النموذج التفصيلي للمؤشر والنصائح التنبؤية.
-          </div>
-        </div>
-      </div>
-
-      <section class="hero">
-        <div class="hero-card">
-          <div class="hero-title">
-            <span class="emoji"></span>
-            <span>الفكرة ببساطة</span>
-          </div>
-          <div class="hero-text">
-            يجمع النظام بيانات غير حساسة عن سلوك المستخدم (حضور المواعيد، تجديد الوثائق في وقتها،
-            وسداد المخالفات)، ثم يحوّلها إلى <strong>مؤشر التزام من ٠ إلى ١٠٠</strong> مع ألوان
-            توضح هل المستخدم ملتزم، متوسط، أو يحتاج تحسين، بالإضافة إلى نصائح ذكية تساعده يطوّر
-            سلوكه قبل ما تتحول الأمور إلى غرامات أو تأخير.
-          </div>
-          <div class="hero-pills">
-            <div class="pill"><span class="dot"></span> تحليل سلوكي غير حساس</div>
-            <div class="pill"><span class="dot"></span> مدرب التزام رقمي داخل أبشر</div>
-            <div class="pill"><span class="dot"></span> قابل للتوسع والربط مع جهات أخرى</div>
-          </div>
-        </div>
-
-        <div class="hero-side">
-          <div class="hero-side-title">
-            <span class="icon"></span>
-            <span>قيمة "مؤشر التزامك" في المنصّة</span>
-          </div>
-          <p>
-            الخدمة ما تستبدل الخدمات الحالية، لكنها تضيف طبقة ذكية فوقها:
-          </p>
-          <ul>
-            <li>تجمع صورة واحدة عن التزام المستخدم بدل ما تبقى البيانات متفرقة.</li>
-            <li>تساعد المستخدم يعرف بالضبط وش يحتاج يسوي عشان يتحسن.</li>
-            <li>تتيح لاحقاً لوحات تحكم للجهات الحكومية مبنية على بيانات التزام فعلية.</li>
-          </ul>
-        </div>
-      </section>
-
-      <div class="section-heading">
-        <span>الخدمات في الواجهة (تصوّر)</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>مركباتي</span>
-          </div>
-          <div class="desc">
-            استعراض بيانات المركبات، صلاحية الاستمارة، التأمين، وبعض التنبيهات المتعلقة بالمخالفات
-            المرورية لكل مركبة (عرض تجريبي فقط).
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>جوازاتي</span>
-          </div>
-          <div class="desc">
-            مراجعة بيانات الجواز وصلاحيته وتجديده إلكترونياً، مع إبراز المدة المتبقية قبل الانتهاء
-            كجزء من تجربة المستخدم (نموذج واجهة).
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>مواعيدي</span>
-          </div>
-          <div class="desc">
-            إدارة المواعيد الحكومية، متابعة حالة الموعد (محجوز، مكتمل، فائت)، وإعادة الحجز عند الحاجة
-            بطريقة بسيطة ومألوفة للمستخدم.
-          </div>
-        </div>
-
-        <!-- التعديل هنا: أزلت / من بداية الرابط -->
-        <a href="iltizamk.html" class="card-link">
-          <div class="card new-service">
-            <div class="label">خدمة مقترحة داخل المنصّة</div>
-            <div class="title">
-              <span class="icon"></span>
-              <span>مؤشر التزامك</span>
-            </div>
-            <div class="desc">
-              خدمة ذكية تحوّل تعاملاتك مع الخدمات الحكومية إلى مؤشر التزام واضح من ٠ إلى ١٠٠،
-              وتقدّم لك نصائح من الذكاء الاصطناعي لرفع التزامك بالمواعيد، تجديد الوثائق في الوقت،
-              وتقليل تأخر سداد المخالفات، مع إمكانية توسيعها لاحقاً لربط المؤشر بمكافآت أو امتيازات.
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="footer-note">
-        * جميع البيانات والأرقام في هذا النموذج تجريبية وللغرض التوضيحي فقط في هاكثون أبشر طويق،
-        ويمكن لاحقاً ربط الواجهة بأنظمة حقيقية لاحتساب المؤشر ديناميكياً.
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+        <div class="page-subtitle">
+          يحلل هذا النموذج
