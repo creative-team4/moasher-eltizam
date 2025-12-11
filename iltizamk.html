@@ -2,19 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>مؤشر التزامك - هاكثون أبشر طويق</title>
+  <title>هاكثون أبشر طويق - مؤشر التزامك</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       --primary: #005c8f;
       --primary-soft: #e0f2fe;
       --bg: #0f172a;
+      --bg-page: #f3f4f6;
       --card-bg: #ffffff;
       --border: #e5e7eb;
       --text-main: #0f172a;
       --text-sub: #6b7280;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.25);
-      --radius-lg: 20px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.28);
+      --radius-lg: 18px;
     }
     * {
       box-sizing: border-box;
@@ -22,10 +23,9 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+      background: radial-gradient(circle at top, #0b1120 0, #020617 40%, #000 100%);
       color: var(--text-main);
     }
-
     /* ===== Header ===== */
     header {
       position: sticky;
@@ -38,328 +38,44 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: #e5e7eb;
     }
-    .header-left {
+    header .logo {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .header-icon {
-      width: 34px;
-      height: 34px;
+    header .logo span.icon {
+      width: 36px;
+      height: 36px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #22c55e, #16a34a 40%, #15803d 80%);
+      background: radial-gradient(circle at 30% 0, #38bdf8, #0ea5e9 40%, #0369a1 80%);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 0 0 2px #020617, 0 0 24px rgba(34, 197, 94, 0.7);
+      font-size: 20px;
+      box-shadow: 0 0 0 2px #0b1120, 0 0 25px rgba(56, 189, 248, 0.6);
     }
-    .header-title-main {
+    header .logo-text-main {
       font-weight: 700;
       font-size: 18px;
+      color: #e5f3ff;
     }
-    .header-title-sub {
+    header .logo-text-sub {
       font-size: 11px;
       color: #9ca3af;
     }
-    .header-right a {
-      font-size: 13px;
-      color: #bfdbfe;
-      text-decoration: none;
-    }
-    .header-right a:hover {
-      text-decoration: underline;
-    }
-
-    /* ===== Page shell & main card ===== */
-    .page-shell {
-      max-width: 1120px;
-      margin: 26px auto 40px;
-      padding: 0 16px 40px;
-    }
-    .page-card {
-      background: radial-gradient(circle at top left, #eef2ff 0, #ffffff 45%, #e5e7eb 100%);
-      border-radius: 22px;
-      padding: 20px 22px 24px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-    .page-card::before {
-      content: "";
-      position: absolute;
-      inset-inline-end: -110px;
-      inset-block-start: -110px;
-      width: 240px;
-      height: 240px;
-      background: radial-gradient(circle, rgba(56,189,248,0.3), transparent 70%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-    .page-card::after {
-      content: "";
-      position: absolute;
-      inset-inline-start: -120px;
-      inset-block-end: -120px;
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle, rgba(45,212,191,0.25), transparent 70%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .page-header {
-      position: relative;
-      z-index: 1;
-      margin-bottom: 18px;
-    }
-    .page-title {
-      font-size: 21px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .page-badge {
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-    .page-subtitle {
-      font-size: 14px;
-      color: var(--text-sub);
-      line-height: 1.8;
-      max-width: 90%;
-    }
-
-    /* ===== Layout: tips + gauge ===== */
-    .layout {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.4fr);
-      gap: 18px;
-    }
-    @media (max-width: 900px) {
-      .page-subtitle { max-width: 100%; }
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 18px;
-      padding: 16px 16px 18px;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
-    }
-    .card h2 {
-      font-size: 16px;
-      margin: 0 0 6px;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card h2 span.icon {
-      font-size: 17px;
-    }
-    .card small {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    /* ===== Gauge ===== */
-    .gauge-wrapper {
-      display: flex;
-      justify-content: center;
-      margin: 16px 0 8px;
-    }
-    .gauge {
-      width: 190px;
-      height: 190px;
-      border-radius: 50%;
-      background: conic-gradient(#16a34a 0 280deg, #e5e7eb 280deg 360deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .gauge-inner {
-      width: 135px;
-      height: 135px;
-      border-radius: 50%;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 0 1px #e5e7eb;
-    }
-    .gauge-score {
-      font-size: 30px;
-      font-weight: 700;
-      color: #16a34a;
-    }
-    .gauge-label {
-      font-size: 12px;
-      color: #6b7280;
-      margin-top: 2px;
-    }
-    .gauge-status {
-      text-align: center;
-      font-size: 13px;
-      color: #374151;
-      margin-top: 6px;
-      line-height: 1.6;
-    }
-    .gauge-legend {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 8px;
-    }
-    .dot {
-      display: inline-block;
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      margin-left: 4px;
-    }
-    .dot.green { background: #16a34a; }
-    .dot.yellow { background: #f59e0b; }
-    .dot.red { background: #ef4444; }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 11px;
-    }
-    .pill {
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #f3f4f6;
-      color: #4b5563;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .pill span.circle {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .metric-card {
-      border-radius: 12px;
-      padding: 10px 11px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-    .metric-title {
-      font-size: 12px;
-      color: #4b5563;
-      margin-bottom: 2px;
-    }
-    .metric-value {
-      font-size: 18px;
-      font-weight: 650;
-      margin-bottom: 2px;
-    }
-    .metric-note {
-      font-size: 11px;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    /* ===== Tips & future ===== */
-    .tips-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .tip {
-      border-radius: 12px;
-      padding: 10px 11px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      font-size: 13px;
-      color: #1f2937;
-    }
-    .tip-title {
-      font-weight: 600;
-      margin-bottom: 3px;
-      font-size: 13px;
-    }
-    .tip-tag {
-      font-size: 11px;
-      color: #2563eb;
-      margin-right: 4px;
-    }
-
-    .timeline {
-      margin-top: 14px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-    .timeline strong {
-      color: #111827;
-    }
-    .timeline ul {
-      margin: 6px 0 0;
-      padding-right: 18px;
-    }
-    .timeline li {
-      margin-bottom: 4px;
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      font-size: 11px;
-      color: #6b7280;
+    header .user {
       text-align: left;
+      font-size: 13px;
+      color: #e5e7eb;
     }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="header-left">
-      <div class="header-icon"></div>
-      <div>
-        <div class="header-title-main">مؤشر التزامك</div>
-        <div class="header-title-sub">مدرب التزام رقمي ضمن تصوّر هاكثون أبشر طويق</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <!-- التعديل هنا فقط -->
-      <a href="index.html">الرجوع للصفحة الرئيسية</a>
-    </div>
-  </header>
+    header .user .name {
+      font-weight: 600;
+    }
+    header .user .role {
+      font-size: 11px;
+      color: #9ca3af;
+    }
 
-  <div class="page-shell">
-    <div class="page-card">
-      <div class="page-header">
-        <div class="page-title">
-          لوحة مؤشر التزامك العام
-          <span class="page-badge">نموذج واجهة تجريبية</span>
-        </div>
-        <div class="page-subtitle">
-          يحلل هذا النموذج
+    /* ===== Main wrapper card ===== */
+    .page
