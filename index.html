@@ -2,515 +2,166 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>هاكثون أبشر طويق - مؤشر التزامك</title>
+  <title>مؤشر التزامك الذكي - هاكثون أبشر طويق</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --primary: #005c8f;
-      --primary-soft: #e0f2fe;
-      --bg: #0f172a;
-      --bg-page: #f3f4f6;
-      --card-bg: #ffffff;
-      --border: #e5e7eb;
-      --text-main: #0f172a;
-      --text-sub: #6b7280;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.28);
-      --radius-lg: 18px;
+      --bg: #e5f0ff;
+      --bg-card: #0f172a;
+      --accent: #22c55e;
+      --accent-purple: #8b5cf6;
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --border: #1f2937;
+      --radius: 18px;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.65);
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0b1120 0, #020617 40%, #000 100%);
+      background: radial-gradient(circle at top, #dbeafe 0, #e5f0ff 50%, #e5e7eb 100%);
       color: var(--text-main);
     }
-    /* ===== Header ===== */
+
     header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: linear-gradient(90deg, #020617ee, #0b1120ee 50%, #020617ee);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #1f2937;
       padding: 10px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-    header .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    header .logo span.icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #38bdf8, #0ea5e9 40%, #0369a1 80%);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 0 0 2px #0b1120, 0 0 25px rgba(56, 189, 248, 0.6);
-    }
-    header .logo-text-main {
-      font-weight: 700;
-      font-size: 18px;
-      color: #e5f3ff;
-    }
-    header .logo-text-sub {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    header .user {
-      text-align: left;
-      font-size: 13px;
+      border-bottom: 1px solid #cbd5f5;
+      background: linear-gradient(90deg, #0f172a, #020617);
       color: #e5e7eb;
     }
-    header .user .name {
-      font-weight: 600;
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+      width: 40px; height: 40px; border-radius: 999px; background: #020617;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 2px #020617, 0 0 18px rgba(15, 23, 42, 0.9); overflow: hidden;
     }
-    header .user .role {
-      font-size: 11px;
-      color: #9ca3af;
-    }
+    .logo-img { width: 100%; height: 100%; object-fit: cover; }
+    .logo-text-main { font-weight: 700; font-size: 17px; }
+    .logo-text-sub { font-size: 11px; color: var(--text-sub); }
+    .user { text-align: left; font-size: 13px; }
+    .user-name { font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-sub); }
 
-    /* ===== Main wrapper card ===== */
-    .page-shell {
-      max-width: 1120px;
-      margin: 26px auto 40px;
-      padding: 0 16px 40px;
+    .shell { max-width: 1040px; margin: 26px auto 40px; padding: 0 16px; }
+    
+    .main-card {
+      background: radial-gradient(circle at top left, #1e1b4b, #020617 60%, #020617 100%); /* Darker, purpler for AI */
+      border-radius: 24px; border: 1px solid #312e81;
+      box-shadow: var(--shadow); padding: 30px;
+      position: relative; overflow: hidden;
     }
-    .page-card {
-      background: radial-gradient(circle at top left, #eff6ff 0, #ffffff 45%, #e5e7eb 100%);
-      border-radius: 22px;
-      padding: 22px 22px 26px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      position: relative;
-      overflow: hidden;
-    }
-    .page-card::before {
-      content: "";
-      position: absolute;
-      inset-inline-end: -120px;
-      inset-block-start: -120px;
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle, rgba(56,189,248,0.3), transparent 70%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-    .page-card::after {
-      content: "";
-      position: absolute;
-      inset-inline-start: -140px;
-      inset-block-end: -140px;
-      width: 280px;
-      height: 280px;
-      background: radial-gradient(circle, rgba(45,212,191,0.25), transparent 70%);
-      opacity: 0.9;
+    .main-card::before {
+      content: ""; position: absolute; inset-inline-end: -80px; inset-block-start: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 70%); /* Purple glow */
       pointer-events: none;
     }
 
-    .page-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-      margin-bottom: 18px;
-    }
-    .titles {
-      max-width: 64%;
-    }
-    .page-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .page-title span.badge-main {
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-    .subtitle {
-      font-size: 14px;
-      color: var(--text-sub);
-      line-height: 1.7;
-    }
-    .cta-box {
-      text-align: left;
-    }
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      padding: 9px 18px;
-      border: none;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      color: #f9fafb;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.45);
-      text-decoration: none;
-      transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
-    }
-    .cta-btn span.icon {
-      font-size: 15px;
-    }
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.55);
-    }
-    .cta-caption {
-      font-size: 11px;
-      color: #4b5563;
-      margin-top: 6px;
-    }
+    .hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: center; }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
 
-    /* ===== Hero layout ===== */
-    .hero {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.4fr);
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-    @media (max-width: 900px) {
-      .titles { max-width: 100%; }
-      .hero {
-        grid-template-columns: 1fr;
-      }
-    }
+    .hero-main-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .hero-main-title span { color: var(--accent-purple); }
+    
+    .hero-subtitle { font-size: 15px; color: var(--text-sub); margin-bottom: 20px; line-height: 1.6; }
+    
+    .feature-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .f-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #e2e8f0; }
+    .f-icon { color: var(--accent); }
 
-    .hero-card {
-      background: rgba(255, 255, 255, 0.96);
-      border-radius: 18px;
-      padding: 14px 16px 16px;
-      border: 1px solid #e5e7eb;
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      border-radius: 12px; padding: 12px 24px;
+      border: 1px solid rgba(139, 92, 246, 0.5);
+      cursor: pointer; text-decoration: none;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff; font-size: 14px; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+      transition: transform 0.2s;
     }
-    .hero-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .hero-title span.emoji {
-      font-size: 18px;
-    }
-    .hero-text {
-      font-size: 13px;
-      color: var(--text-sub);
-      line-height: 1.8;
-    }
-    .hero-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-      font-size: 11px;
-    }
-    .pill {
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #f3f4f6;
-      color: #4b5563;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .pill span.dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
+    .btn-primary:hover { transform: translateY(-2px); }
 
-    .hero-side {
-      background: rgba(15, 23, 42, 0.95);
-      color: #e5e7eb;
-      border-radius: 18px;
-      padding: 14px 16px 16px;
-      border: 1px solid #1f2937;
+    .hero-right-card {
+      background: rgba(15, 23, 42, 0.6); border-radius: 20px;
+      border: 1px solid #1e293b; padding: 20px; backdrop-filter: blur(10px);
     }
-    .hero-side-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .code-snippet {
+        font-family: 'Courier New', monospace; font-size: 11px; color: #94a3b8;
+        line-height: 1.5; opacity: 0.8;
     }
-    .hero-side-title span.icon {
-      font-size: 16px;
-    }
-    .hero-side p {
-      font-size: 12px;
-      color: #cbd5f5;
-      line-height: 1.7;
-    }
-    .hero-side ul {
-      margin: 6px 0 0;
-      padding-right: 18px;
-      font-size: 12px;
-    }
-    .hero-side li {
-      margin-bottom: 4px;
-    }
+    .highlight { color: #a78bfa; }
+    .highlight-g { color: #4ade80; }
 
-    /* ===== Services grid ===== */
-    .section-heading {
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      color: #111827;
-    }
-    .section-heading span.line {
-      flex-grow: 1;
-      height: 1px;
-      background: #e5e7eb;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 14px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.98);
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease,
-                  background 0.12s ease;
-      position: relative;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
-      border-color: #cbd5f5;
-    }
-    .card .label {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-bottom: 4px;
-    }
-    .card .title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card .title span.icon {
-      font-size: 16px;
-    }
-    .card .desc {
-      font-size: 13px;
-      color: var(--text-sub);
-      line-height: 1.7;
-    }
-
-    a.card-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .card.new-service {
-      border: 1px solid #bfdbfe;
-      background: linear-gradient(135deg, #e0f2fe, #eef2ff);
-      overflow: hidden;
-    }
-    .card.new-service::before {
-      content: "خدمة مقترحة";
-      position: absolute;
-      inset-inline-start: 12px;
-      inset-block-start: 11px;
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: #1d4ed8;
-      color: #f9fafb;
-      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.4);
-    }
-    .card.new-service:hover {
-      background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-      border-color: #60a5fa;
-    }
-    .card.new-service .title {
-      margin-top: 16px;
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      font-size: 11px;
-      color: #6b7280;
-      text-align: left;
-    }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <span class="icon"></span>
+      <div class="logo-icon">
+        <img src="/creative-logo.jpg" alt="Logo" class="logo-img" />
+      </div>
       <div>
         <div class="logo-text-main">هاكثون أبشر طويق</div>
-        <div class="logo-text-sub">نموذج واجهة لخدمة "مؤشر التزامك"</div>
+        <div class="logo-text-sub">مسار الابتكار في الخدمات</div>
       </div>
     </div>
     <div class="user">
-      <div class="name">Creative</div>
-      <div class="role">مشارك في الهاكثون</div>
+      <div class="user-name">Creative Team</div>
     </div>
   </header>
 
-  <div class="page-shell">
-    <div class="page-card">
-      <div class="page-header">
-        <div class="titles">
-          <div class="page-title">
-            قائمة الخدمات
-            <span class="badge-main">تصوّر واجهة تجريبية</span>
+  <main class="shell">
+    <section class="main-card">
+      <div class="hero">
+        <div>
+          <div class="hero-main-title">
+            أكثر من مجرد تنبيهات...<br>
+            <span>نظام تنبؤ ذكي لالتزامك</span>
           </div>
-          <div class="subtitle">
-            هذه الصفحة تُظهر كيف يمكن إضافة خدمة <strong>مؤشر التزامك</strong> داخل منصة حكومية مثل أبشر،
-            بحيث تتحول المنصّة من تنفيذ طلبات فقط إلى مدرب رقمي يساعد المستخدم على فهم مستوى التزامه
-            وتحسين تجربته مع المواعيد، الوثائق، والمخالفات.
-          </div>
-        </div>
-        <div class="cta-box">
-          <a href="iltizamk.html" class="cta-btn">
-            <span class="icon"></span>
-            <span>جرّب واجهة مؤشر التزامك الآن</span>
-          </a>
-          <div class="cta-caption">
-            ينقلك إلى صفحة النموذج التفصيلي للمؤشر والنصائح التنبؤية.
-          </div>
-        </div>
-      </div>
-
-      <section class="hero">
-        <div class="hero-card">
-          <div class="hero-title">
-            <span class="emoji"></span>
-            <span>الفكرة ببساطة</span>
-          </div>
-          <div class="hero-text">
-            يجمع النظام بيانات غير حساسة عن سلوك المستخدم (حضور المواعيد، تجديد الوثائق في وقتها،
-            وسداد المخالفات)، ثم يحوّلها إلى <strong>مؤشر التزام من ٠ إلى ١٠٠</strong> مع ألوان
-            توضح هل المستخدم ملتزم، متوسط، أو يحتاج تحسين، بالإضافة إلى نصائح ذكية تساعده يطوّر
-            سلوكه قبل ما تتحول الأمور إلى غرامات أو تأخير.
-          </div>
-          <div class="hero-pills">
-            <div class="pill"><span class="dot"></span> تحليل سلوكي غير حساس</div>
-            <div class="pill"><span class="dot"></span> مدرب التزام رقمي داخل أبشر</div>
-            <div class="pill"><span class="dot"></span> قابل للتوسع والربط مع جهات أخرى</div>
-          </div>
-        </div>
-
-        <div class="hero-side">
-          <div class="hero-side-title">
-            <span class="icon"></span>
-            <span>قيمة "مؤشر التزامك" في المنصّة</span>
-          </div>
-          <p>
-            الخدمة ما تستبدل الخدمات الحالية، لكنها تضيف طبقة ذكية فوقها:
+          <p class="hero-subtitle">
+            لا تعرض لي متى تنتهي هويتي، بل أخبرني <strong>كيف سيؤثر ذلك على حياتي</strong>.
+            نقدم طبقة ذكاء اصطناعي تحلل الترابط بين الخدمات وتتوقع المخاطر قبل حدوثها.
           </p>
-          <ul>
-            <li>تجمع صورة واحدة عن التزام المستخدم بدل ما تبقى البيانات متفرقة.</li>
-            <li>تساعد المستخدم يعرف بالضبط وش يحتاج يسوي عشان يتحسن.</li>
-            <li>تتيح لاحقاً لوحات تحكم للجهات الحكومية مبنية على بيانات التزام فعلية.</li>
-          </ul>
-        </div>
-      </section>
 
-      <div class="section-heading">
-        <span>الخدمات في الواجهة (تصوّر)</span>
-        <span class="line"></span>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>مركباتي</span>
-          </div>
-          <div class="desc">
-            استعراض بيانات المركبات، صلاحية الاستمارة، التأمين، وبعض التنبيهات المتعلقة بالمخالفات
-            المرورية لكل مركبة (عرض تجريبي فقط).
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>جوازاتي</span>
-          </div>
-          <div class="desc">
-            مراجعة بيانات الجواز وصلاحيته وتجديده إلكترونياً، مع إبراز المدة المتبقية قبل الانتهاء
-            كجزء من تجربة المستخدم (نموذج واجهة).
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="label">خدمة قائمة</div>
-          <div class="title">
-            <span class="icon"></span>
-            <span>مواعيدي</span>
-          </div>
-          <div class="desc">
-            إدارة المواعيد الحكومية، متابعة حالة الموعد (محجوز، مكتمل، فائت)، وإعادة الحجز عند الحاجة
-            بطريقة بسيطة ومألوفة للمستخدم.
-          </div>
-        </div>
-
-        <a href="iltizamk.html" class="card-link">
-          <div class="card new-service">
-            <div class="label">خدمة مقترحة داخل المنصّة</div>
-            <div class="title">
-              <span class="icon"></span>
-              <span>مؤشر التزامك</span>
+          <div class="feature-list">
+            <div class="f-item">
+                <span class="f-icon">✔</span>
+                <span>تحليل الأثر المتسلسل (Chain Reaction Analysis)</span>
             </div>
-            <div class="desc">
-              خدمة ذكية تحوّل تعاملاتك مع الخدمات الحكومية إلى مؤشر التزام واضح من ٠ إلى ١٠٠،
-              وتقدّم لك نصائح من الذكاء الاصطناعي لرفع التزامك بالمواعيد، تجديد الوثائق في الوقت،
-              وتقليل تأخر سداد المخالفات، مع إمكانية توسيعها لاحقاً لربط المؤشر بمكافآت أو امتيازات.
+            <div class="f-item">
+                <span class="f-icon">✔</span>
+                <span>محاكاة السيناريوهات (What-if Simulation)</span>
+            </div>
+            <div class="f-item">
+                <span class="f-icon">✔</span>
+                <span>توجيه سلوكي وقائي وليس مجرد رد فعل</span>
             </div>
           </div>
-        </a>
-      </div>
 
-      <div class="footer-note">
-        * جميع البيانات والأرقام في هذا النموذج تجريبية وللغرض التوضيحي فقط في هاكثون أبشر طويق،
-        ويمكن لاحقاً ربط الواجهة بأنظمة حقيقية لاحتساب المؤشر ديناميكياً.
+          <a href="/iltizamk.html" class="btn-primary">
+            <span>تشغيل التجربة التفاعلية</span>
+            <span style="font-size:18px">←</span>
+          </a>
+        </div>
+
+        <aside class="hero-right-card">
+           <div style="margin-bottom:10px; font-weight:bold; font-size:13px; color:#fff;">كيف يعمل النموذج؟</div>
+           <div class="code-snippet">
+               > Analyzing User Behavior...<br>
+               > Found Risk: <span class="highlight">Unpaid Traffic Fine</span><br>
+               > Impact Prediction: <span class="highlight">High</span><br>
+               > Linked Service: <span class="highlight">Bank Account Freeze (in 45 days)</span><br>
+               ---------------------------------<br>
+               > Recommendation:<br>
+               > <span class="highlight-g">Simulate Payment Effect (+7 Score)</span>
+           </div>
+        </aside>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 </body>
 </html>
