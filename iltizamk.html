@@ -192,16 +192,21 @@
     .score-delta.visible { opacity: 1; transform: translateY(0); }
     .score-delta.pos { color: var(--accent); }
 
-    /* Metrics Grid & Comparisons */
+    /* New Metric Styles */
     .metrics-row {
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
     }
     .metric-box {
         background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center;
     }
-    .m-val { font-size: 18px; font-weight: 700; color: #fff; }
+    .m-val { font-size: 18px; font-weight: 700; color: #fff; direction: ltr; } /* LTR for numbers */
     .m-lbl { font-size: 10px; color: #64748b; margin-top: 4px; }
-    .m-comp { font-size: 10px; font-weight: bold; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    
+    /* Comparison Arrow Styles */
+    .m-comp { 
+        font-size: 10px; font-weight: bold; margin-top: 6px; 
+        display: flex; align-items: center; justify-content: center; gap: 4px; 
+    }
     .comp-up { color: #22c55e; }
     .comp-down { color: #ef4444; }
 
@@ -333,19 +338,20 @@
     const baseScore = 65;
 
     // حالة المقاييس: النسبة الحالية والسابقة
-    // type: 'inverse' يعني الأقل أفضل (مخاطر)، 'direct' يعني الأعلى أفضل (جودة)
+    // type: 'inverse' يعني (المخاطر) كل ما قلت النسبة كان أفضل
+    // type: 'direct' يعني (الجودة) كل ما زادت النسبة كان أفضل
     const metricsState = {
-        traffic: { current: 65, last: 75, type: 'inverse' }, // مخاطر: كانت 75% وصارت 65% (تحسن)
-        appts:   { current: 82, last: 78, type: 'direct' },  // جودة: كانت 78% وصارت 82% (تحسن)
-        docs:    { current: 30, last: 35, type: 'direct' }   // اكتمال: كان 35% وصار 30% (تراجع)
+        traffic: { current: 65, last: 75, type: 'inverse' }, // كان 75% وصار 65% (يعني تحسن لأن المخاطر قلت)
+        appts:   { current: 82, last: 78, type: 'direct' },  // كان 78% وصار 82% (تحسن)
+        docs:    { current: 30, last: 35, type: 'direct' }   // كان 35% وصار 30% (تراجع)
     };
 
     function toggleSim(element, points, type) {
-        // Toggle UI
+        // 1. تغيير شكل الزر
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        // حساب النقاط الرئيسية
+        // 2. تحديث الدرجة الكلية
         if (isActive) {
             currentScore += points;
         } else {
@@ -353,16 +359,17 @@
         }
         if (currentScore > 100) currentScore = 100;
 
-        // تحديث قيم المقاييس الفرعية بناء على الاختيار
+        // 3. تحديث النسب الفرعية بناء على الزر المضغوط
         updateMetricState(type, isActive);
 
-        // تحديث الواجهة
+        // 4. رسم كل شيء من جديد
         updateGauge(currentScore);
         renderMetrics();
         updateAiInsights(currentScore);
     }
 
     function updateMetricState(type, isActive) {
+        // إذا ضغطنا الزر (isActive) يعني فيه تحسين (+1)، والعكس (-1)
         const improvement = isActive ? 1 : -1;
         
         if (type === 'traffic') {
@@ -372,7 +379,7 @@
             // تحديث الوثائق يرفع نسبة الاكتمال
             metricsState.docs.current += (50 * improvement);
         } else if (type === 'appts') {
-            // حجز المواعيد يرفع الجودة قليلاً
+            // حجز المواعيد يرفع الجودة
             metricsState.appts.current += (10 * improvement);
         }
     }
@@ -391,21 +398,23 @@
         // عرض النسبة الحالية
         valEl.textContent = m.current + '%';
         
-        // تلوين القيمة (أخضر/أصفر/برتقالي)
+        // تلوين القيمة
         if (m.type === 'inverse') {
+            // للمخاطر: فوق 50% لون تحذيري
             valEl.style.color = m.current > 50 ? '#facc15' : '#22c55e'; 
         } else {
+            // للجودة: تحت 50% لون برتقالي
             valEl.style.color = m.current < 50 ? '#f97316' : '#22c55e'; 
         }
 
-        // حساب المقارنة مع الشهر الماضي
+        // حساب الفرق عن الشهر الماضي
         const diff = m.current - m.last;
         let isImproved = false;
 
         if (m.type === 'inverse') {
-            isImproved = diff < 0; // للمخاطر: النقصان هو تحسن
+            isImproved = diff < 0; // في المخاطر: النقصان هو التحسن
         } else {
-            isImproved = diff > 0; // للجودة: الزيادة هي تحسن
+            isImproved = diff > 0; // في الجودة: الزيادة هي التحسن
         }
 
         if (diff === 0) {
@@ -413,6 +422,7 @@
         } else {
             const arrow = isImproved ? '▲' : '▼'; 
             const colorClass = isImproved ? 'comp-up' : 'comp-down';
+            // Math.abs عشان نشيل علامة السالب من الرقم ونعرض بس السهم
             compEl.innerHTML = `<span class="${colorClass}">${arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
         }
     }
