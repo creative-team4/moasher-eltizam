@@ -166,7 +166,7 @@
     .ai-text h4 { margin: 0 0 4px 0; font-size: 13px; color: #c4b5fd; }
     .ai-text p { margin: 0; font-size: 11px; color: #ddd6fe; line-height: 1.4; }
 
-    /* === NEW: Summary Box Style (كما في الصورة) === */
+    /* === NEW: Summary Box Style === */
     .change-summary-box {
         background: #1e293b;
         border: 1px solid #334155;
@@ -184,8 +184,7 @@
         font-weight: 600;
         color: #fff;
         margin-bottom: 10px;
-        border-bottom: 1px solid #334155;
-        padding-bottom: 8px;
+        padding-bottom: 5px;
     }
     .change-detail-item {
         font-size: 13px;
@@ -195,6 +194,7 @@
         align-items: center;
         gap: 8px;
         line-height: 1.5;
+        flex-wrap: wrap; /* للسماح للعناصر بالنزول لسطر جديد في شاشات الجوال */
     }
     .change-indicator {
         font-weight: 700;
@@ -211,7 +211,7 @@
     .change-indicator.up { color: var(--accent); } /* Green */
     .change-indicator.down { color: #ef4444; } /* Red */
     /* === END NEW STYLES === */
-    
+
     .gauge-wrapper { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
     .gauge-bg {
         width: 100%; height: 100%; border-radius: 50%;
@@ -238,7 +238,7 @@
     .score-delta.visible { opacity: 1; transform: translateY(0); }
     .score-delta.pos { color: var(--accent); }
 
-    /* Metrics Grid (Retained Simple Text) */
+    /* Metrics Grid */
     .metrics-row {
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
     }
@@ -346,13 +346,13 @@
                 </div>
                 
                 <div class="change-detail-item">
-                    <span id="appts-change-icon" class="change-indicator"></span>
-                    <span id="appts-change-text">المواعيد: </span>
+                    <span id="appts-change-icon" class="change-indicator down"><span class="arrow">▼</span> 4%-</span>
+                    <span id="appts-change-text">المواعيد: تجديد متأخر قليلاً </span>
                 </div>
                 
                 <div class="change-detail-item">
-                    <span id="docs-change-icon" class="change-indicator"></span>
-                    <span id="docs-change-text">الوثائق: </span>
+                    <span id="docs-change-icon" class="change-indicator down"><span class="arrow">▼</span> 4%-</span>
+                    <span id="docs-change-text">الوثائق: تجديد متأخر قليلاً </span>
                 </div>
             </div>
             <div class="gauge-wrapper">
@@ -367,15 +367,15 @@
 
             <div class="metrics-row">
                 <div class="metric-box">
-                    <div class="m-val" style="color:#facc15" id="metric-traffic-val">متوسط</div>
+                    <div class="m-val" style="color:#facc15">متوسط</div>
                     <div class="m-lbl">مخاطر المرور</div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#22c55e" id="metric-appts-val">عالٍ</div>
+                    <div class="m-val" style="color:#22c55e">عالٍ</div>
                     <div class="m-lbl">جودة المواعيد</div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#f97316" id="metric-docs-val">منخفض</div>
+                    <div class="m-val" style="color:#f97316">منخفض</div>
                     <div class="m-lbl">اكتمال الوثائق</div>
                 </div>
             </div>
@@ -389,7 +389,7 @@
   <script>
     let currentScore = 65;
     const baseScore = 65;
-
+    
     // حالة المحاكي النشط وتأثيره (لصندوق الملخص الجديد)
     let totalSimPoints = 0;
     const simStates = {
@@ -397,40 +397,33 @@
         docs: false,    // تحديث العنوان (5 نقاط)
         appts: false    // حجز موعد (3 نقاط)
     };
-    // Score used in the image's example summary (73 to 78)
+    // النتيجة الافتراضية للشهر الماضي التي سنقارن بها
     const lastMonthScore = 73; 
 
-
-    // تم إضافة نوع المحاكاة (type) هنا
+    // تم تعديل الدالة لإضافة 'type'
     function toggleSim(element, points, type) {
         // Toggle UI
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        // Update simple point logic
+        // Calculate Logic
         if (isActive) {
             currentScore += points;
             totalSimPoints += points;
-            simStates[type] = true; // تفعيل حالة المحاكاة
+            simStates[type] = true;
         } else {
             currentScore -= points;
             totalSimPoints -= points;
-            simStates[type] = false; // إيقاف حالة المحاكاة
+            simStates[type] = false;
         }
 
         // Cap score
         if (currentScore > 100) currentScore = 100;
-        if (currentScore < 0) currentScore = 0; 
-
-        // Update Gauge
-        updateGauge(currentScore);
         
-        // Update Delta Text
+        // Update all elements
+        updateGauge(currentScore);
         updateAiInsights(currentScore);
-
-        // === NEW: Update the dynamic summary box ===
-        updateChangeSummary();
-        // ==========================================
+        updateChangeSummary(); // دالة تحديث الصندوق الجديد
     }
 
     // === NEW FUNCTION: لتحديث الملخص كما في الصورة تماماً ===
@@ -447,42 +440,72 @@
         const downArrow = '<span class="arrow">▼</span>';
 
         if (totalSimPoints === 0) {
-            summaryBox.classList.remove('visible');
-            return;
-        }
-        summaryBox.classList.add('visible');
-        
-        // --- 1. المؤشر العام ---
-        // سنفترض أن المؤشر العام للمحاكاة يبدأ دائماً من 73 ليتطابق مع الصورة
-        const currentRefScore = lastMonthScore; // 73
-        const finalRefScore = currentRefScore + totalSimPoints; 
-        const generalDelta = totalSimPoints;
+            // الحالة الافتراضية: عرض أداء الشهر الماضي (كما في الصورة بدون تغيير)
+            summaryBox.classList.add('visible'); // جعله مرئياً دائماً كما في الصورة
+            
+            // بيانات المؤشر العام (افتراضية من الصورة)
+            const generalDelta = 5;
+            genIconEl.className = 'change-indicator up';
+            genIconEl.innerHTML = upArrow + generalDelta + ' نقاط';
+            genTextEl.textContent = `المؤشر العام: (من ${lastMonthScore} إلى ${lastMonthScore + generalDelta})`;
 
-        genIconEl.className = 'change-indicator up';
-        genIconEl.innerHTML = upArrow + generalDelta + ' نقاط';
-        genTextEl.textContent = `المؤشر العام: (من ${currentRefScore} إلى ${finalRefScore})`;
-
-        // --- 2. المواعيد --- (Mapped to Appts sim button)
-        if (simStates.appts) {
-            // الحالة النشطة: تطابق النص المطلوب في الصورة
+            // بيانات المواعيد (افتراضية من الصورة)
             apptsIconEl.className = 'change-indicator up';
             apptsIconEl.innerHTML = upArrow + ' 8%+';
             apptsTextEl.textContent = 'المواعيد: حضور أفضل';
+
+            // بيانات الوثائق (افتراضية من الصورة)
+            docsIconEl.className = 'change-indicator down';
+            docsIconEl.innerHTML = downArrow + ' 4%-';
+            docsTextEl.textContent = 'الوثائق: تجديد متأخر قليلاً';
+            
+            return;
+        }
+        
+        summaryBox.classList.add('visible'); // التأكد من أنه مرئي
+        
+        // --- 1. المؤشر العام (يجمع التأثيرات الجديدة على الأداء السابق) ---
+        const currentRefScore = lastMonthScore; // 73 (نتيجة الشهر الماضي)
+        const totalPreviousDelta = 5; // الافتراضي أن الشهر الماضي كان فيه تحسن 5 نقاط
+        
+        // الآن المحاكاة (totalSimPoints) ستضاف إلى هذه النتيجة
+        const finalRefScore = currentRefScore + totalPreviousDelta + totalSimPoints; 
+        const generalDelta = totalPreviousDelta + totalSimPoints;
+
+        if (generalDelta > 0) {
+            genIconEl.className = 'change-indicator up';
+            genIconEl.innerHTML = upArrow + generalDelta + ' نقاط';
+        } else if (generalDelta < 0) {
+            genIconEl.className = 'change-indicator down';
+            genIconEl.innerHTML = downArrow + Math.abs(generalDelta) + ' نقاط';
         } else {
-            // الحالة غير النشطة: العودة إلى حالة لا تأثير
-            apptsIconEl.className = '';
-            apptsIconEl.innerHTML = '';
-            apptsTextEl.textContent = 'المواعيد: لا يوجد تأثير';
+            genIconEl.className = '';
+            genIconEl.innerHTML = '0';
+        }
+        genTextEl.textContent = `المؤشر العام: (من ${currentRefScore} إلى ${finalRefScore})`;
+
+
+        // --- 2. المواعيد --- (Mapped to Appts sim button)
+        if (simStates.appts) {
+            // المحاكاة مفعّلة: تحسن كبير
+            apptsIconEl.className = 'change-indicator up';
+            apptsIconEl.innerHTML = upArrow + ' 11%+'; // زيادة التأثير قليلاً
+            apptsTextEl.textContent = 'المواعيد: حضور ممتاز وتخطيط جيد';
+        } else {
+            // المحاكاة غير مفعّلة: العودة إلى حالة الشهر الماضي (من الصورة)
+            apptsIconEl.className = 'change-indicator up';
+            apptsIconEl.innerHTML = upArrow + ' 8%+';
+            apptsTextEl.textContent = 'المواعيد: حضور أفضل';
         }
 
         // --- 3. الوثائق --- (Mapped to Docs sim button)
         if (simStates.docs) {
-            // الحالة النشطة: اكتمال الوثائق
+            // المحاكاة مفعّلة: اكتمال الوثائق
             docsIconEl.className = 'change-indicator up';
-            docsIconEl.innerHTML = upArrow + ' 4%+';
-            docsTextEl.textContent = 'الوثائق: اكتمال متوقع';
+            docsIconEl.innerHTML = upArrow + ' 5%+'; // عكس النقص
+            docsTextEl.textContent = 'الوثائق: اكتمال متوقع ومبكر';
         } else {
-            // الحالة غير النشطة: تطابق النص المطلوب في الصورة (تجديد متأخر قليلاً)
+            // المحاكاة غير مفعّلة: العودة إلى حالة الشهر الماضي (من الصورة)
             docsIconEl.className = 'change-indicator down';
             docsIconEl.innerHTML = downArrow + ' 4%-';
             docsTextEl.textContent = 'الوثائق: تجديد متأخر قليلاً';
@@ -499,11 +522,12 @@
             deltaEl.textContent = `+${delta} تحسن`;
             deltaEl.className = "score-delta visible pos";
             
+            // Update AI Text contextually
             document.getElementById('ai-success-msg').style.display = "inline";
             document.getElementById('ai-title').textContent = "تحديث التوقعات";
             document.getElementById('ai-title').style.color = "#22c55e";
         } else {
-            deltaEl.className = "score-delta"; 
+            deltaEl.className = "score-delta"; // hide
             document.getElementById('ai-success-msg').style.display = "none";
             document.getElementById('ai-title').textContent = "تحليل المخاطر المترابطة";
             document.getElementById('ai-title').style.color = "#c4b5fd";
@@ -518,6 +542,7 @@
         num.textContent = score;
 
         // Update graphic (conic gradient)
+        // 65% means 234 degrees
         const deg = (score / 100) * 360;
         fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
     }
@@ -525,7 +550,7 @@
     // Init
     document.addEventListener("DOMContentLoaded", () => {
         updateGauge(baseScore);
-        // لضمان إخفاء صندوق الملخص عند التحميل
+        // عرض الصندوق بالبيانات الافتراضية عند التحميل
         updateChangeSummary(); 
     });
   </script>
