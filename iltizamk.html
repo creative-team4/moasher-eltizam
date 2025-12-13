@@ -5,6 +5,7 @@
   <title>لوحة مؤشر التزامك - الذكاء الاصطناعي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    /* ... (CSS Styles remain the same) ... */
     :root {
       --page-bg: #e5f0ff;
       --card-bg: #0b1220;
@@ -166,6 +167,45 @@
     .ai-text h4 { margin: 0 0 4px 0; font-size: 13px; color: #c4b5fd; }
     .ai-text p { margin: 0; font-size: 11px; color: #ddd6fe; line-height: 1.4; }
 
+    /* === NEW: Summary Box Style === */
+    .change-summary-box {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        width: 100%;
+        display: none; /* مخفي مبدئياً */
+    }
+    .change-summary-box.visible {
+        display: block;
+    }
+    .change-summary-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 8px;
+    }
+    .change-detail-item {
+        font-size: 12px;
+        color: #e2e8f0;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .change-indicator {
+        font-weight: 700;
+        direction: ltr;
+        display: flex;
+        align-items: center;
+    }
+    .change-indicator.up { color: var(--accent); }
+    .change-indicator.down { color: #ef4444; }
+
+
     .gauge-wrapper { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
     .gauge-bg {
         width: 100%; height: 100%; border-radius: 50%;
@@ -192,24 +232,16 @@
     .score-delta.visible { opacity: 1; transform: translateY(0); }
     .score-delta.pos { color: var(--accent); }
 
-    /* New Metric Styles */
+    /* Metrics Grid */
     .metrics-row {
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
     }
     .metric-box {
         background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center;
     }
-    .m-val { font-size: 18px; font-weight: 700; color: #fff; direction: ltr; } /* LTR for numbers */
+    .m-val { font-size: 18px; font-weight: 700; color: #fff; }
     .m-lbl { font-size: 10px; color: #64748b; margin-top: 4px; }
-    
-    /* Comparison Arrow Styles */
-    .m-comp { 
-        font-size: 10px; font-weight: bold; margin-top: 6px; 
-        display: flex; align-items: center; justify-content: center; gap: 4px; 
-    }
-    .comp-up { color: #22c55e; }
-    .comp-down { color: #ef4444; }
-
+    /* ... (Rest of CSS Styles remain the same) ... */
   </style>
 </head>
 <body>
@@ -248,7 +280,7 @@
         <aside class="sim-card">
             <div class="sim-header">
                 <div class="sim-title">
-                    <span>⚡</span> مدرب التزامك الرقمي
+                    <span>⚡</span> محاكي الأثر الذكي
                 </div>
                 <div class="sim-desc">
                     جرّب تفعيل هذه الإجراءات لترى كيف يتوقع الذكاء الاصطناعي تحسن تقييمك ومخاطرك.
@@ -256,26 +288,26 @@
             </div>
 
             <div class="sim-action-group">
-                <div class="sim-item" onclick="toggleSim(this, 7, 'traffic')">
+                <div class="sim-item" onclick="toggleSim(this, 7, 'traffic', 'سداد مخالفة "قطع إشارة"')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">المخالفات المرورية</div>
+                        <div class="sim-name">سداد مخالفة "قطع إشارة"</div>
                         <span class="sim-impact">+7 نقاط في المؤشر</span>
                     </div>
                 </div>
 
-                <div class="sim-item" onclick="toggleSim(this, 5, 'docs')">
+                <div class="sim-item" onclick="toggleSim(this, 5, 'docs', 'تحديث العنوان الوطني (ناقص)')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">تجديد الوثائق</div>
+                        <div class="sim-name">تحديث العنوان الوطني (ناقص)</div>
                         <span class="sim-impact">+5 نقاط في المؤشر</span>
                     </div>
                 </div>
 
-                <div class="sim-item" onclick="toggleSim(this, 3, 'appts')">
+                <div class="sim-item" onclick="toggleSim(this, 3, 'appts', 'حجز موعد فحص دوري مبكر')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">المواعيد الحكومية</div>
+                        <div class="sim-name">حجز موعد فحص دوري مبكر</div>
                         <span class="sim-impact">+3 نقاط (وقائي)</span>
                     </div>
                 </div>
@@ -299,6 +331,21 @@
                 </div>
             </div>
 
+            <div class="change-summary-box" id="change-summary">
+                <div class="change-summary-title">كيف تتغير التوقعات بإجراء المحاكاة؟</div>
+                <div class="change-detail-item">
+                    <div class="change-indicator up" id="general-change"></div>
+                    <span>المؤشر العام</span>
+                </div>
+                <div class="change-detail-item">
+                    <div class="change-indicator up" id="traffic-change"></div>
+                    <span>مخاطر المرور</span>
+                </div>
+                <div class="change-detail-item">
+                    <div class="change-indicator up" id="docs-change"></div>
+                    <span>اكتمال الوثائق</span>
+                </div>
+            </div>
             <div class="gauge-wrapper">
                 <div class="gauge-bg"></div>
                 <div class="gauge-fill" id="gauge-fill"></div>
@@ -311,19 +358,16 @@
 
             <div class="metrics-row">
                 <div class="metric-box">
-                    <div class="m-val" id="metric-traffic-val">--%</div>
+                    <div class="m-val" style="color:#facc15" id="metric-traffic-val">متوسط</div>
                     <div class="m-lbl">مخاطر المرور</div>
-                    <div class="m-comp" id="metric-traffic-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" id="metric-appts-val">--%</div>
+                    <div class="m-val" style="color:#22c55e" id="metric-appts-val">عالٍ</div>
                     <div class="m-lbl">جودة المواعيد</div>
-                    <div class="m-comp" id="metric-appts-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" id="metric-docs-val">--%</div>
+                    <div class="m-val" style="color:#f97316" id="metric-docs-val">منخفض</div>
                     <div class="m-lbl">اكتمال الوثائق</div>
-                    <div class="m-comp" id="metric-docs-comp"></div>
                 </div>
             </div>
 
@@ -336,96 +380,92 @@
   <script>
     let currentScore = 65;
     const baseScore = 65;
-
-    // حالة المقاييس: النسبة الحالية والسابقة
-    // type: 'inverse' يعني (المخاطر) كل ما قلت النسبة كان أفضل
-    // type: 'direct' يعني (الجودة) كل ما زادت النسبة كان أفضل
-    const metricsState = {
-        traffic: { current: 65, last: 75, type: 'inverse' }, // كان 75% وصار 65% (يعني تحسن لأن المخاطر قلت)
-        appts:   { current: 82, last: 78, type: 'direct' },  // كان 78% وصار 82% (تحسن)
-        docs:    { current: 30, last: 35, type: 'direct' }   // كان 35% وصار 30% (تراجع)
+    
+    // حالة المحاكي النشط وتأثيره على الأقسام
+    const activeSimulations = {
+        traffic: { isActive: false, points: 7, name: 'مخاطر المرور', effect: -40, currentDisplay: 65, initialDisplay: 65, color: '#facc15' },
+        docs: { isActive: false, points: 5, name: 'اكتمال الوثائق', effect: +50, currentDisplay: 30, initialDisplay: 30, color: '#f97316' },
+        appts: { isActive: false, points: 3, name: 'جودة المواعيد', effect: +10, currentDisplay: 82, initialDisplay: 82, color: '#22c55e' }
     };
+    
+    let totalPointsChange = 0; // لجمع التغيرات في النقاط
 
-    function toggleSim(element, points, type) {
-        // 1. تغيير شكل الزر
+    function toggleSim(element, points, type, name) {
+        // 1. تحديث حالة الزر
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
-        
-        // 2. تحديث الدرجة الكلية
-        if (isActive) {
-            currentScore += points;
-        } else {
-            currentScore -= points;
-        }
-        if (currentScore > 100) currentScore = 100;
+        activeSimulations[type].isActive = isActive;
 
-        // 3. تحديث النسب الفرعية بناء على الزر المضغوط
-        updateMetricState(type, isActive);
+        // 2. تحديث النقاط الكلية
+        if (isActive) {
+            totalPointsChange += points;
+        } else {
+            totalPointsChange -= points;
+        }
+
+        currentScore = baseScore + totalPointsChange;
+        if (currentScore > 100) currentScore = 100;
+        if (currentScore < 0) currentScore = 0; // للحماية فقط
+
+        // 3. تحديث القيم الفرعية
+        updateMetricsDisplay(type, isActive);
 
         // 4. رسم كل شيء من جديد
         updateGauge(currentScore);
-        renderMetrics();
         updateAiInsights(currentScore);
+        updateChangeSummary(); // تحديث الملخص الجديد
+        renderMetricsText(); // تحديث قيمة (متوسط/عالٍ)
     }
-
-    function updateMetricState(type, isActive) {
-        // إذا ضغطنا الزر (isActive) يعني فيه تحسين (+1)، والعكس (-1)
-        const improvement = isActive ? 1 : -1;
+    
+    function updateMetricsDisplay(type, isActive) {
+        const sim = activeSimulations[type];
+        const initialVal = sim.initialDisplay;
         
-        if (type === 'traffic') {
-            // سداد المخالفات يقلل المخاطر بشكل كبير
-            metricsState.traffic.current -= (40 * improvement); 
-        } else if (type === 'docs') {
-            // تحديث الوثائق يرفع نسبة الاكتمال
-            metricsState.docs.current += (50 * improvement);
-        } else if (type === 'appts') {
-            // حجز المواعيد يرفع الجودة
-            metricsState.appts.current += (10 * improvement);
-        }
-    }
-
-    function renderMetrics() {
-        renderSingleMetric('traffic', 'metric-traffic-val', 'metric-traffic-comp');
-        renderSingleMetric('appts', 'metric-appts-val', 'metric-appts-comp');
-        renderSingleMetric('docs', 'metric-docs-val', 'metric-docs-comp');
-    }
-
-    function renderSingleMetric(key, valId, compId) {
-        const m = metricsState[key];
-        const valEl = document.getElementById(valId);
-        const compEl = document.getElementById(compId);
-
-        // عرض النسبة الحالية
-        valEl.textContent = m.current + '%';
+        // حساب القيمة الحالية بناءً على ما هو مُفعّل
+        let calculatedVal = initialVal;
         
-        // تلوين القيمة
-        if (m.type === 'inverse') {
-            // للمخاطر: فوق 50% لون تحذيري
-            valEl.style.color = m.current > 50 ? '#facc15' : '#22c55e'; 
-        } else {
-            // للجودة: تحت 50% لون برتقالي
-            valEl.style.color = m.current < 50 ? '#f97316' : '#22c55e'; 
-        }
-
-        // حساب الفرق عن الشهر الماضي
-        const diff = m.current - m.last;
-        let isImproved = false;
-
-        if (m.type === 'inverse') {
-            isImproved = diff < 0; // في المخاطر: النقصان هو التحسن
-        } else {
-            isImproved = diff > 0; // في الجودة: الزيادة هي التحسن
-        }
-
-        if (diff === 0) {
-            compEl.innerHTML = `<span style="color:#94a3b8">- ثابت</span>`;
-        } else {
-            const arrow = isImproved ? '▲' : '▼'; 
-            const colorClass = isImproved ? 'comp-up' : 'comp-down';
-            // Math.abs عشان نشيل علامة السالب من الرقم ونعرض بس السهم
-            compEl.innerHTML = `<span class="${colorClass}">${arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
-        }
+        if (activeSimulations.traffic.isActive) calculatedVal += activeSimulations.traffic.effect;
+        if (activeSimulations.docs.isActive) calculatedVal += activeSimulations.docs.effect;
+        if (activeSimulations.appts.isActive) calculatedVal += activeSimulations.appts.effect;
+        
+        // التحديث يتم بناء على جميع العناصر النشطة
+        activeSimulations[type].currentDisplay = calculatedVal;
     }
+    
+    // دالة جديدة لتحديث الملخص (كيف تتغير التوقعات؟)
+    function updateChangeSummary() {
+        const summaryBox = document.getElementById('change-summary');
+        const generalChangeEl = document.getElementById('general-change');
+        const trafficChangeEl = document.getElementById('traffic-change');
+        const docsChangeEl = document.getElementById('docs-change');
+        
+        // إظهار أو إخفاء الصندوق
+        if (totalPointsChange === 0) {
+            summaryBox.classList.remove('visible');
+            return;
+        }
+        summaryBox.classList.add('visible');
+        
+        // 1. المؤشر العام
+        const generalText = (totalPointsChange > 0 ? '▲ +' : '▼ ') + Math.abs(totalPointsChange) + ' نقاط (' + baseScore + ' إلى ' + currentScore + ')';
+        generalChangeEl.textContent = generalText;
+        generalChangeEl.className = 'change-indicator ' + (totalPointsChange > 0 ? 'up' : 'down');
+        
+        // 2. مخاطر المرور (traffic)
+        const trafficDiff = activeSimulations.traffic.isActive ? activeSimulations.traffic.effect : 0;
+        const trafficNewVal = activeSimulations.traffic.initialDisplay + trafficDiff;
+        const trafficText = (trafficDiff < 0 ? '▲ -' : (trafficDiff > 0 ? '▼ +' : '-')) + Math.abs(trafficDiff) + '% (' + (trafficNewVal < 50 ? 'انخفاض' : 'ارتفاع') + ' في المخاطر)';
+        trafficChangeEl.textContent = trafficText;
+        trafficChangeEl.className = 'change-indicator ' + (trafficDiff < 0 ? 'up' : (trafficDiff > 0 ? 'down' : '')); // الأقل أفضل للمخاطر
+        
+        // 3. اكتمال الوثائق (docs)
+        const docsDiff = activeSimulations.docs.isActive ? activeSimulations.docs.effect : 0;
+        const docsNewVal = activeSimulations.docs.initialDisplay + docsDiff;
+        const docsText = (docsDiff > 0 ? '▲ +' : '▼ ') + Math.abs(docsDiff) + '% (' + (docsNewVal > 50 ? 'أعلى' : 'أقل') + ' في الاكتمال)';
+        docsChangeEl.textContent = docsText;
+        docsChangeEl.className = 'change-indicator ' + (docsDiff > 0 ? 'up' : (docsDiff < 0 ? 'down' : '')); // الأكثر أفضل للاكتمال
+    }
+
 
     function updateAiInsights(score) {
         const delta = score - baseScore;
@@ -449,15 +489,38 @@
     function updateGauge(score) {
         const fill = document.getElementById('gauge-fill');
         const num = document.getElementById('score-num');
+        
         num.textContent = score;
+
         const deg = (score / 100) * 360;
         fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
     }
+    
+    // دالة لتحديث قيم (متوسط/عالٍ/منخفض)
+    function renderMetricsText() {
+        // traffic: مخاطر (الأقل أفضل)
+        const trafficVal = activeSimulations.traffic.currentDisplay;
+        const trafficEl = document.getElementById('metric-traffic-val');
+        trafficEl.textContent = trafficVal > 70 ? 'مرتفع' : (trafficVal > 40 ? 'متوسط' : 'منخفض');
+        trafficEl.style.color = trafficVal > 70 ? '#f97316' : (trafficVal > 40 ? '#facc15' : '#22c55e');
 
-    // تشغيل عند التحميل
+        // appts: جودة (الأكثر أفضل)
+        const apptsVal = activeSimulations.appts.currentDisplay;
+        const apptsEl = document.getElementById('metric-appts-val');
+        apptsEl.textContent = apptsVal > 70 ? 'عالٍ' : (apptsVal > 40 ? 'متوسط' : 'منخفض');
+        apptsEl.style.color = apptsVal > 70 ? '#22c55e' : (apptsVal > 40 ? '#facc15' : '#f97316');
+
+        // docs: اكتمال (الأكثر أفضل)
+        const docsVal = activeSimulations.docs.currentDisplay;
+        const docsEl = document.getElementById('metric-docs-val');
+        docsEl.textContent = docsVal > 70 ? 'عالٍ' : (docsVal > 40 ? 'متوسط' : 'منخفض');
+        docsEl.style.color = docsVal > 70 ? '#22c55e' : (docsVal > 40 ? '#facc15' : '#f97316');
+    }
+
+    // Init
     document.addEventListener("DOMContentLoaded", () => {
         updateGauge(baseScore);
-        renderMetrics();
+        renderMetricsText();
     });
   </script>
 </body>
