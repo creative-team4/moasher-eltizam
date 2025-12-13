@@ -166,52 +166,6 @@
     .ai-text h4 { margin: 0 0 4px 0; font-size: 13px; color: #c4b5fd; }
     .ai-text p { margin: 0; font-size: 11px; color: #ddd6fe; line-height: 1.4; }
 
-    /* === NEW: Summary Box Style === */
-    .change-summary-box {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 20px;
-        width: 100%;
-        display: none; /* مخفي مبدئياً */
-    }
-    .change-summary-box.visible {
-        display: block;
-    }
-    .change-summary-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
-    }
-    .change-detail-item {
-        font-size: 13px;
-        color: #e2e8f0;
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        line-height: 1.5;
-        flex-wrap: wrap; /* للسماح للعناصر بالنزول لسطر جديد في شاشات الجوال */
-    }
-    .change-indicator {
-        font-weight: 700;
-        direction: ltr;
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-    }
-    .change-indicator .arrow { 
-        margin-inline-end: 4px;
-        font-size: 16px;
-        line-height: 1;
-    }
-    .change-indicator.up { color: var(--accent); } /* Green */
-    .change-indicator.down { color: #ef4444; } /* Red */
-    /* === END NEW STYLES === */
-
     .gauge-wrapper { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
     .gauge-bg {
         width: 100%; height: 100%; border-radius: 50%;
@@ -238,15 +192,23 @@
     .score-delta.visible { opacity: 1; transform: translateY(0); }
     .score-delta.pos { color: var(--accent); }
 
-    /* Metrics Grid */
+    /* New Metric Styles */
     .metrics-row {
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
     }
     .metric-box {
         background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center;
     }
-    .m-val { font-size: 18px; font-weight: 700; color: #fff; }
+    .m-val { font-size: 18px; font-weight: 700; color: #fff; direction: ltr; } /* LTR for numbers */
     .m-lbl { font-size: 10px; color: #64748b; margin-top: 4px; }
+    
+    /* Comparison Arrow Styles */
+    .m-comp { 
+        font-size: 10px; font-weight: bold; margin-top: 6px; 
+        display: flex; align-items: center; justify-content: center; gap: 4px; 
+    }
+    .comp-up { color: #22c55e; }
+    .comp-down { color: #ef4444; }
 
   </style>
 </head>
@@ -286,7 +248,7 @@
         <aside class="sim-card">
             <div class="sim-header">
                 <div class="sim-title">
-                    <span>⚡</span> محاكي الأثر الذكي
+                    <span>⚡</span> مدرب التزامك الرقمي
                 </div>
                 <div class="sim-desc">
                     جرّب تفعيل هذه الإجراءات لترى كيف يتوقع الذكاء الاصطناعي تحسن تقييمك ومخاطرك.
@@ -297,7 +259,7 @@
                 <div class="sim-item" onclick="toggleSim(this, 7, 'traffic')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">سداد مخالفة "قطع إشارة"</div>
+                        <div class="sim-name">المخالفات المرورية</div>
                         <span class="sim-impact">+7 نقاط في المؤشر</span>
                     </div>
                 </div>
@@ -305,7 +267,7 @@
                 <div class="sim-item" onclick="toggleSim(this, 5, 'docs')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">تحديث العنوان الوطني (ناقص)</div>
+                        <div class="sim-name">تجديد الوثائق</div>
                         <span class="sim-impact">+5 نقاط في المؤشر</span>
                     </div>
                 </div>
@@ -313,7 +275,7 @@
                 <div class="sim-item" onclick="toggleSim(this, 3, 'appts')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">حجز موعد فحص دوري مبكر</div>
+                        <div class="sim-name">المواعيد الحكومية</div>
                         <span class="sim-impact">+3 نقاط (وقائي)</span>
                     </div>
                 </div>
@@ -337,24 +299,6 @@
                 </div>
             </div>
 
-            <div class="change-summary-box" id="change-summary">
-                <div class="change-summary-title">كيف تغير التزامك عن الشهر الماضي؟</div>
-                
-                <div class="change-detail-item">
-                    <span id="general-change-icon" class="change-indicator up"><span class="arrow">▲</span> 5 نقاط</span>
-                    <span id="general-change-text"> المؤشر العام: (من 73 إلى 78) </span>
-                </div>
-                
-                <div class="change-detail-item">
-                    <span id="appts-change-icon" class="change-indicator down"><span class="arrow">▼</span> 4%-</span>
-                    <span id="appts-change-text">المواعيد: تجديد متأخر قليلاً </span>
-                </div>
-                
-                <div class="change-detail-item">
-                    <span id="docs-change-icon" class="change-indicator down"><span class="arrow">▼</span> 4%-</span>
-                    <span id="docs-change-text">الوثائق: تجديد متأخر قليلاً </span>
-                </div>
-            </div>
             <div class="gauge-wrapper">
                 <div class="gauge-bg"></div>
                 <div class="gauge-fill" id="gauge-fill"></div>
@@ -367,16 +311,19 @@
 
             <div class="metrics-row">
                 <div class="metric-box">
-                    <div class="m-val" style="color:#facc15">متوسط</div>
+                    <div class="m-val" id="metric-traffic-val">--%</div>
                     <div class="m-lbl">مخاطر المرور</div>
+                    <div class="m-comp" id="metric-traffic-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#22c55e">عالٍ</div>
+                    <div class="m-val" id="metric-appts-val">--%</div>
                     <div class="m-lbl">جودة المواعيد</div>
+                    <div class="m-comp" id="metric-appts-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#f97316">منخفض</div>
+                    <div class="m-val" id="metric-docs-val">--%</div>
                     <div class="m-lbl">اكتمال الوثائق</div>
+                    <div class="m-comp" id="metric-docs-comp"></div>
                 </div>
             </div>
 
@@ -389,130 +336,96 @@
   <script>
     let currentScore = 65;
     const baseScore = 65;
-    
-    // حالة المحاكي النشط وتأثيره (لصندوق الملخص الجديد)
-    let totalSimPoints = 0;
-    const simStates = {
-        traffic: false, // سداد مخالفة (7 نقاط)
-        docs: false,    // تحديث العنوان (5 نقاط)
-        appts: false    // حجز موعد (3 نقاط)
-    };
-    // النتيجة الافتراضية للشهر الماضي التي سنقارن بها
-    const lastMonthScore = 73; 
 
-    // تم تعديل الدالة لإضافة 'type'
+    // حالة المقاييس: النسبة الحالية والسابقة
+    // type: 'inverse' يعني (المخاطر) كل ما قلت النسبة كان أفضل
+    // type: 'direct' يعني (الجودة) كل ما زادت النسبة كان أفضل
+    const metricsState = {
+        traffic: { current: 65, last: 75, type: 'inverse' }, // كان 75% وصار 65% (يعني تحسن لأن المخاطر قلت)
+        appts:   { current: 82, last: 78, type: 'direct' },  // كان 78% وصار 82% (تحسن)
+        docs:    { current: 30, last: 35, type: 'direct' }   // كان 35% وصار 30% (تراجع)
+    };
+
     function toggleSim(element, points, type) {
-        // Toggle UI
+        // 1. تغيير شكل الزر
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        // Calculate Logic
+        // 2. تحديث الدرجة الكلية
         if (isActive) {
             currentScore += points;
-            totalSimPoints += points;
-            simStates[type] = true;
         } else {
             currentScore -= points;
-            totalSimPoints -= points;
-            simStates[type] = false;
         }
-
-        // Cap score
         if (currentScore > 100) currentScore = 100;
-        
-        // Update all elements
+
+        // 3. تحديث النسب الفرعية بناء على الزر المضغوط
+        updateMetricState(type, isActive);
+
+        // 4. رسم كل شيء من جديد
         updateGauge(currentScore);
+        renderMetrics();
         updateAiInsights(currentScore);
-        updateChangeSummary(); // دالة تحديث الصندوق الجديد
     }
 
-    // === NEW FUNCTION: لتحديث الملخص كما في الصورة تماماً ===
-    function updateChangeSummary() {
-        const summaryBox = document.getElementById('change-summary');
-        const genIconEl = document.getElementById('general-change-icon');
-        const genTextEl = document.getElementById('general-change-text');
-        const apptsIconEl = document.getElementById('appts-change-icon');
-        const apptsTextEl = document.getElementById('appts-change-text');
-        const docsIconEl = document.getElementById('docs-change-icon');
-        const docsTextEl = document.getElementById('docs-change-text');
+    function updateMetricState(type, isActive) {
+        // إذا ضغطنا الزر (isActive) يعني فيه تحسين (+1)، والعكس (-1)
+        const improvement = isActive ? 1 : -1;
         
-        const upArrow = '<span class="arrow">▲</span>';
-        const downArrow = '<span class="arrow">▼</span>';
-
-        if (totalSimPoints === 0) {
-            // الحالة الافتراضية: عرض أداء الشهر الماضي (كما في الصورة بدون تغيير)
-            summaryBox.classList.add('visible'); // جعله مرئياً دائماً كما في الصورة
-            
-            // بيانات المؤشر العام (افتراضية من الصورة)
-            const generalDelta = 5;
-            genIconEl.className = 'change-indicator up';
-            genIconEl.innerHTML = upArrow + generalDelta + ' نقاط';
-            genTextEl.textContent = `المؤشر العام: (من ${lastMonthScore} إلى ${lastMonthScore + generalDelta})`;
-
-            // بيانات المواعيد (افتراضية من الصورة)
-            apptsIconEl.className = 'change-indicator up';
-            apptsIconEl.innerHTML = upArrow + ' 8%+';
-            apptsTextEl.textContent = 'المواعيد: حضور أفضل';
-
-            // بيانات الوثائق (افتراضية من الصورة)
-            docsIconEl.className = 'change-indicator down';
-            docsIconEl.innerHTML = downArrow + ' 4%-';
-            docsTextEl.textContent = 'الوثائق: تجديد متأخر قليلاً';
-            
-            return;
-        }
-        
-        summaryBox.classList.add('visible'); // التأكد من أنه مرئي
-        
-        // --- 1. المؤشر العام (يجمع التأثيرات الجديدة على الأداء السابق) ---
-        const currentRefScore = lastMonthScore; // 73 (نتيجة الشهر الماضي)
-        const totalPreviousDelta = 5; // الافتراضي أن الشهر الماضي كان فيه تحسن 5 نقاط
-        
-        // الآن المحاكاة (totalSimPoints) ستضاف إلى هذه النتيجة
-        const finalRefScore = currentRefScore + totalPreviousDelta + totalSimPoints; 
-        const generalDelta = totalPreviousDelta + totalSimPoints;
-
-        if (generalDelta > 0) {
-            genIconEl.className = 'change-indicator up';
-            genIconEl.innerHTML = upArrow + generalDelta + ' نقاط';
-        } else if (generalDelta < 0) {
-            genIconEl.className = 'change-indicator down';
-            genIconEl.innerHTML = downArrow + Math.abs(generalDelta) + ' نقاط';
-        } else {
-            genIconEl.className = '';
-            genIconEl.innerHTML = '0';
-        }
-        genTextEl.textContent = `المؤشر العام: (من ${currentRefScore} إلى ${finalRefScore})`;
-
-
-        // --- 2. المواعيد --- (Mapped to Appts sim button)
-        if (simStates.appts) {
-            // المحاكاة مفعّلة: تحسن كبير
-            apptsIconEl.className = 'change-indicator up';
-            apptsIconEl.innerHTML = upArrow + ' 11%+'; // زيادة التأثير قليلاً
-            apptsTextEl.textContent = 'المواعيد: حضور ممتاز وتخطيط جيد';
-        } else {
-            // المحاكاة غير مفعّلة: العودة إلى حالة الشهر الماضي (من الصورة)
-            apptsIconEl.className = 'change-indicator up';
-            apptsIconEl.innerHTML = upArrow + ' 8%+';
-            apptsTextEl.textContent = 'المواعيد: حضور أفضل';
-        }
-
-        // --- 3. الوثائق --- (Mapped to Docs sim button)
-        if (simStates.docs) {
-            // المحاكاة مفعّلة: اكتمال الوثائق
-            docsIconEl.className = 'change-indicator up';
-            docsIconEl.innerHTML = upArrow + ' 5%+'; // عكس النقص
-            docsTextEl.textContent = 'الوثائق: اكتمال متوقع ومبكر';
-        } else {
-            // المحاكاة غير مفعّلة: العودة إلى حالة الشهر الماضي (من الصورة)
-            docsIconEl.className = 'change-indicator down';
-            docsIconEl.innerHTML = downArrow + ' 4%-';
-            docsTextEl.textContent = 'الوثائق: تجديد متأخر قليلاً';
+        if (type === 'traffic') {
+            // سداد المخالفات يقلل المخاطر بشكل كبير
+            metricsState.traffic.current -= (40 * improvement); 
+        } else if (type === 'docs') {
+            // تحديث الوثائق يرفع نسبة الاكتمال
+            metricsState.docs.current += (50 * improvement);
+        } else if (type === 'appts') {
+            // حجز المواعيد يرفع الجودة
+            metricsState.appts.current += (10 * improvement);
         }
     }
-    // === END NEW FUNCTION ===
 
+    function renderMetrics() {
+        renderSingleMetric('traffic', 'metric-traffic-val', 'metric-traffic-comp');
+        renderSingleMetric('appts', 'metric-appts-val', 'metric-appts-comp');
+        renderSingleMetric('docs', 'metric-docs-val', 'metric-docs-comp');
+    }
+
+    function renderSingleMetric(key, valId, compId) {
+        const m = metricsState[key];
+        const valEl = document.getElementById(valId);
+        const compEl = document.getElementById(compId);
+
+        // عرض النسبة الحالية
+        valEl.textContent = m.current + '%';
+        
+        // تلوين القيمة
+        if (m.type === 'inverse') {
+            // للمخاطر: فوق 50% لون تحذيري
+            valEl.style.color = m.current > 50 ? '#facc15' : '#22c55e'; 
+        } else {
+            // للجودة: تحت 50% لون برتقالي
+            valEl.style.color = m.current < 50 ? '#f97316' : '#22c55e'; 
+        }
+
+        // حساب الفرق عن الشهر الماضي
+        const diff = m.current - m.last;
+        let isImproved = false;
+
+        if (m.type === 'inverse') {
+            isImproved = diff < 0; // في المخاطر: النقصان هو التحسن
+        } else {
+            isImproved = diff > 0; // في الجودة: الزيادة هي التحسن
+        }
+
+        if (diff === 0) {
+            compEl.innerHTML = `<span style="color:#94a3b8">- ثابت</span>`;
+        } else {
+            const arrow = isImproved ? '▲' : '▼'; 
+            const colorClass = isImproved ? 'comp-up' : 'comp-down';
+            // Math.abs عشان نشيل علامة السالب من الرقم ونعرض بس السهم
+            compEl.innerHTML = `<span class="${colorClass}">${arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
+        }
+    }
 
     function updateAiInsights(score) {
         const delta = score - baseScore;
@@ -522,12 +435,11 @@
             deltaEl.textContent = `+${delta} تحسن`;
             deltaEl.className = "score-delta visible pos";
             
-            // Update AI Text contextually
             document.getElementById('ai-success-msg').style.display = "inline";
             document.getElementById('ai-title').textContent = "تحديث التوقعات";
             document.getElementById('ai-title').style.color = "#22c55e";
         } else {
-            deltaEl.className = "score-delta"; // hide
+            deltaEl.className = "score-delta"; 
             document.getElementById('ai-success-msg').style.display = "none";
             document.getElementById('ai-title').textContent = "تحليل المخاطر المترابطة";
             document.getElementById('ai-title').style.color = "#c4b5fd";
@@ -537,21 +449,15 @@
     function updateGauge(score) {
         const fill = document.getElementById('gauge-fill');
         const num = document.getElementById('score-num');
-        
-        // Update number
         num.textContent = score;
-
-        // Update graphic (conic gradient)
-        // 65% means 234 degrees
         const deg = (score / 100) * 360;
         fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
     }
 
-    // Init
+    // تشغيل عند التحميل
     document.addEventListener("DOMContentLoaded", () => {
         updateGauge(baseScore);
-        // عرض الصندوق بالبيانات الافتراضية عند التحميل
-        updateChangeSummary(); 
+        renderMetrics();
     });
   </script>
 </body>
