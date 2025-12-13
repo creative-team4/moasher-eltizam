@@ -19,6 +19,7 @@
       --shadow: 0 22px 55px rgba(15, 23, 42, 0.65);
       --radius: 22px;
       --ai-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --gauge-empty-color: #1e293b; /* لون الخلفية للجزء الفارغ من المؤشر */
     }
     * { box-sizing: border-box; }
 
@@ -206,12 +207,12 @@
     .gauge-wrapper { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
     .gauge-bg {
         width: 100%; height: 100%; border-radius: 50%;
-        background: conic-gradient(#1e293b 0deg 360deg);
+        background: var(--gauge-empty-color); /* Use variable for background */
         position: absolute; z-index: 1;
     }
     .gauge-fill {
         width: 100%; height: 100%; border-radius: 50%;
-        background: conic-gradient(var(--accent) 0deg, transparent 0deg);
+        background: conic-gradient(var(--accent) 0deg, var(--gauge-empty-color) 0deg);
         position: absolute; z-index: 2;
         transition: background 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -406,9 +407,23 @@
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        currentScore = isActive ? currentScore + points : currentScore - points;
-        if (currentScore > 100) currentScore = 100;
-        if (currentScore < baseScore) currentScore = baseScore; // Prevent score from going below base
+        // Calculate the target score based on the action
+        const targetScore = isActive ? currentScore + points : currentScore - points;
+        
+        // Prevent score from going below base or above 100
+        if (targetScore > 100) {
+            currentScore = 100;
+        } else if (targetScore < baseScore && !isActive) {
+            // Only update score if it's decreasing
+            currentScore = targetScore;
+        } else if (isActive) {
+            currentScore = targetScore;
+        }
+        
+        // When all are toggled off, reset to base score
+        if (!document.querySelector('.sim-item.active')) {
+            currentScore = baseScore;
+        }
 
         updateMetricState(type, isActive);
         
@@ -485,6 +500,9 @@
         const duration = 1000; // 1 second animation
         let startTime = null;
 
+        // Get the computed style for the gauge empty color
+        const gaugeEmptyColor = getComputedStyle(document.documentElement).getPropertyValue('--gauge-empty-color');
+
         function animationStep(timestamp) {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
@@ -492,7 +510,10 @@
             
             numEl.textContent = animatedScore;
             const deg = (animatedScore / 100) * 360;
-            fill.style.background = `conic-gradient(#22c55e 0deg <LaTex>${deg}deg, transparent $</LaTex>{deg}deg)`;
+            
+            // **THE FIX IS HERE**
+            // The second color in the gradient should be the empty color, not transparent.
+            fill.style.background = `conic-gradient(var(--accent) <LaTex>${deg}deg, $</LaTex>{gaugeEmptyColor.trim()} ${deg}deg)`;
 
             if (progress < 1) {
                 requestAnimationFrame(animationStep);
