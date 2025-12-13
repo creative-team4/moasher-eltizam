@@ -96,6 +96,43 @@
     .page-sub { font-size: 12px; color: var(--text-sub); line-height: 1.5; }
     .page-sub strong { color: #8b5cf6; }
 
+    /* --- NEW: Comparison Section --- */
+    .comparison-section {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid #1e293b;
+        border-radius: 14px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+    }
+    .comparison-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 12px;
+    }
+    .comparison-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-around;
+    }
+    .comp-item {
+        background: #020617;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-grow: 1;
+    }
+    .comp-item .label { color: #9ca3af; }
+    .comp-item .value { font-weight: bold; }
+    .comp-item .value.up { color: #22c55e; }
+    .comp-item .value.down { color: #ef4444; }
+    .comp-item .details { font-size: 10px; color: #64748b; }
+
     /* Layout Grid */
     .layout {
       margin-top: 20px;
@@ -216,7 +253,7 @@
   <header>
     <div class="header-left">
       <div class="header-icon">
-        <img src="/creative-logo.jpg" alt="شعار" class="logo-img" />
+        <img src="https://placehold.co/40x40/020617/FFF?text=S" alt="شعار" class="logo-img" />
       </div>
       <div>
         <div class="header-title-main">مؤشر التزامك</div>
@@ -224,7 +261,7 @@
       </div>
     </div>
     <div class="header-right">
-      <a href="index.html">الرئيسية</a>
+      <a href="#">الرئيسية</a>
     </div>
   </header>
 
@@ -241,6 +278,28 @@
             وليس فقط عرض تواريخ الانتهاء.
           </div>
         </div>
+      </div>
+
+      <!-- NEW: Comparison Section -->
+      <div class="comparison-section">
+          <div class="comparison-title">كيف تغير التزامك عن الشهر الماضي؟</div>
+          <div class="comparison-grid">
+              <div class="comp-item">
+                  <span class="label">المؤشر العام:</span>
+                  <span class="value up">▲ 5+ نقاط</span>
+                  <span class="details">(من 73 إلى 78)</span>
+              </div>
+              <div class="comp-item">
+                  <span class="label">المواعيد:</span>
+                  <span class="value up">▲ +8%</span>
+                  <span class="details">حضور أفضل</span>
+              </div>
+              <div class="comp-item">
+                  <span class="label">الوثائق:</span>
+                  <span class="value down">▼ -4%</span>
+                  <span class="details">تجديد متأخر قليلاً</span>
+              </div>
+          </div>
       </div>
 
       <div class="layout">
@@ -304,7 +363,7 @@
                 <div class="gauge-fill" id="gauge-fill"></div>
                 <div class="gauge-inner">
                     <div class="score-delta" id="score-delta">+0</div>
-                    <div class="score-display" id="score-num">65</div>
+                    <div class="score-display" id="score-num">0</div>
                     <div class="score-label">درجة الالتزام</div>
                 </div>
             </div>
@@ -334,52 +393,38 @@
   </main>
 
   <script>
-    let currentScore = 65;
     const baseScore = 65;
+    let currentScore = baseScore;
 
-    // حالة المقاييس: النسبة الحالية والسابقة
-    // type: 'inverse' يعني (المخاطر) كل ما قلت النسبة كان أفضل
-    // type: 'direct' يعني (الجودة) كل ما زادت النسبة كان أفضل
     const metricsState = {
-        traffic: { current: 65, last: 75, type: 'inverse' }, // كان 75% وصار 65% (يعني تحسن لأن المخاطر قلت)
-        appts:   { current: 82, last: 78, type: 'direct' },  // كان 78% وصار 82% (تحسن)
-        docs:    { current: 30, last: 35, type: 'direct' }   // كان 35% وصار 30% (تراجع)
+        traffic: { current: 65, last: 75, type: 'inverse' },
+        appts:   { current: 82, last: 78, type: 'direct' },
+        docs:    { current: 30, last: 35, type: 'direct' }
     };
 
     function toggleSim(element, points, type) {
-        // 1. تغيير شكل الزر
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        // 2. تحديث الدرجة الكلية
-        if (isActive) {
-            currentScore += points;
-        } else {
-            currentScore -= points;
-        }
+        currentScore = isActive ? currentScore + points : currentScore - points;
         if (currentScore > 100) currentScore = 100;
+        if (currentScore < baseScore) currentScore = baseScore; // Prevent score from going below base
 
-        // 3. تحديث النسب الفرعية بناء على الزر المضغوط
         updateMetricState(type, isActive);
-
-        // 4. رسم كل شيء من جديد
-        updateGauge(currentScore);
+        
+        animateGauge(currentScore);
         renderMetrics();
         updateAiInsights(currentScore);
     }
 
     function updateMetricState(type, isActive) {
-        // إذا ضغطنا الزر (isActive) يعني فيه تحسين (+1)، والعكس (-1)
         const improvement = isActive ? 1 : -1;
         
         if (type === 'traffic') {
-            // سداد المخالفات يقلل المخاطر بشكل كبير
             metricsState.traffic.current -= (40 * improvement); 
         } else if (type === 'docs') {
-            // تحديث الوثائق يرفع نسبة الاكتمال
             metricsState.docs.current += (50 * improvement);
         } else if (type === 'appts') {
-            // حجز المواعيد يرفع الجودة
             metricsState.appts.current += (10 * improvement);
         }
     }
@@ -395,35 +440,23 @@
         const valEl = document.getElementById(valId);
         const compEl = document.getElementById(compId);
 
-        // عرض النسبة الحالية
         valEl.textContent = m.current + '%';
         
-        // تلوين القيمة
         if (m.type === 'inverse') {
-            // للمخاطر: فوق 50% لون تحذيري
             valEl.style.color = m.current > 50 ? '#facc15' : '#22c55e'; 
         } else {
-            // للجودة: تحت 50% لون برتقالي
             valEl.style.color = m.current < 50 ? '#f97316' : '#22c55e'; 
         }
 
-        // حساب الفرق عن الشهر الماضي
         const diff = m.current - m.last;
-        let isImproved = false;
-
-        if (m.type === 'inverse') {
-            isImproved = diff < 0; // في المخاطر: النقصان هو التحسن
-        } else {
-            isImproved = diff > 0; // في الجودة: الزيادة هي التحسن
-        }
+        let isImproved = (m.type === 'inverse') ? diff < 0 : diff > 0;
 
         if (diff === 0) {
             compEl.innerHTML = `<span style="color:#94a3b8">- ثابت</span>`;
         } else {
             const arrow = isImproved ? '▲' : '▼'; 
             const colorClass = isImproved ? 'comp-up' : 'comp-down';
-            // Math.abs عشان نشيل علامة السالب من الرقم ونعرض بس السهم
-            compEl.innerHTML = `<span class="${colorClass}">${arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
+            compEl.innerHTML = `<span class="<LaTex>${colorClass}">$</LaTex>{arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
         }
     }
 
@@ -434,7 +467,6 @@
         if (delta > 0) {
             deltaEl.textContent = `+${delta} تحسن`;
             deltaEl.className = "score-delta visible pos";
-            
             document.getElementById('ai-success-msg').style.display = "inline";
             document.getElementById('ai-title').textContent = "تحديث التوقعات";
             document.getElementById('ai-title').style.color = "#22c55e";
@@ -446,17 +478,31 @@
         }
     }
 
-    function updateGauge(score) {
+    function animateGauge(targetScore) {
         const fill = document.getElementById('gauge-fill');
-        const num = document.getElementById('score-num');
-        num.textContent = score;
-        const deg = (score / 100) * 360;
-        fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
+        const numEl = document.getElementById('score-num');
+        const startScore = parseInt(numEl.textContent) || 0;
+        const duration = 1000; // 1 second animation
+        let startTime = null;
+
+        function animationStep(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            const animatedScore = Math.floor(progress * (targetScore - startScore) + startScore);
+            
+            numEl.textContent = animatedScore;
+            const deg = (animatedScore / 100) * 360;
+            fill.style.background = `conic-gradient(#22c55e 0deg <LaTex>${deg}deg, transparent $</LaTex>{deg}deg)`;
+
+            if (progress < 1) {
+                requestAnimationFrame(animationStep);
+            }
+        }
+        requestAnimationFrame(animationStep);
     }
 
-    // تشغيل عند التحميل
     document.addEventListener("DOMContentLoaded", () => {
-        updateGauge(baseScore);
+        animateGauge(baseScore);
         renderMetrics();
     });
   </script>
