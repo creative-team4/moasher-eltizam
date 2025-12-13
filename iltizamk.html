@@ -192,7 +192,7 @@
     .score-delta.visible { opacity: 1; transform: translateY(0); }
     .score-delta.pos { color: var(--accent); }
 
-    /* Metrics Grid */
+    /* Metrics Grid & Comparisons */
     .metrics-row {
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
     }
@@ -201,6 +201,9 @@
     }
     .m-val { font-size: 18px; font-weight: 700; color: #fff; }
     .m-lbl { font-size: 10px; color: #64748b; margin-top: 4px; }
+    .m-comp { font-size: 10px; font-weight: bold; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .comp-up { color: #22c55e; }
+    .comp-down { color: #ef4444; }
 
   </style>
 </head>
@@ -240,7 +243,7 @@
         <aside class="sim-card">
             <div class="sim-header">
                 <div class="sim-title">
-                    <span>⚡</span> محاكي الأثر الذكي
+                    <span>⚡</span> مدرب التزامك الرقمي
                 </div>
                 <div class="sim-desc">
                     جرّب تفعيل هذه الإجراءات لترى كيف يتوقع الذكاء الاصطناعي تحسن تقييمك ومخاطرك.
@@ -248,26 +251,26 @@
             </div>
 
             <div class="sim-action-group">
-                <div class="sim-item" onclick="toggleSim(this, 7)">
+                <div class="sim-item" onclick="toggleSim(this, 7, 'traffic')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">سداد مخالفة "قطع إشارة"</div>
+                        <div class="sim-name">المخالفات المرورية</div>
                         <span class="sim-impact">+7 نقاط في المؤشر</span>
                     </div>
                 </div>
 
-                <div class="sim-item" onclick="toggleSim(this, 5)">
+                <div class="sim-item" onclick="toggleSim(this, 5, 'docs')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">تحديث العنوان الوطني (ناقص)</div>
+                        <div class="sim-name">تجديد الوثائق</div>
                         <span class="sim-impact">+5 نقاط في المؤشر</span>
                     </div>
                 </div>
 
-                <div class="sim-item" onclick="toggleSim(this, 3)">
+                <div class="sim-item" onclick="toggleSim(this, 3, 'appts')">
                     <div class="checkbox-custom"></div>
                     <div class="sim-content">
-                        <div class="sim-name">حجز موعد فحص دوري مبكر</div>
+                        <div class="sim-name">المواعيد الحكومية</div>
                         <span class="sim-impact">+3 نقاط (وقائي)</span>
                     </div>
                 </div>
@@ -303,16 +306,19 @@
 
             <div class="metrics-row">
                 <div class="metric-box">
-                    <div class="m-val" style="color:#facc15">متوسط</div>
+                    <div class="m-val" id="metric-traffic-val">--%</div>
                     <div class="m-lbl">مخاطر المرور</div>
+                    <div class="m-comp" id="metric-traffic-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#22c55e">عالٍ</div>
+                    <div class="m-val" id="metric-appts-val">--%</div>
                     <div class="m-lbl">جودة المواعيد</div>
+                    <div class="m-comp" id="metric-appts-comp"></div>
                 </div>
                 <div class="metric-box">
-                    <div class="m-val" style="color:#f97316">منخفض</div>
+                    <div class="m-val" id="metric-docs-val">--%</div>
                     <div class="m-lbl">اكتمال الوثائق</div>
+                    <div class="m-comp" id="metric-docs-comp"></div>
                 </div>
             </div>
 
@@ -326,38 +332,104 @@
     let currentScore = 65;
     const baseScore = 65;
 
-    function toggleSim(element, points) {
+    // حالة المقاييس: النسبة الحالية والسابقة
+    // type: 'inverse' يعني الأقل أفضل (مخاطر)، 'direct' يعني الأعلى أفضل (جودة)
+    const metricsState = {
+        traffic: { current: 65, last: 75, type: 'inverse' }, // مخاطر: كانت 75% وصارت 65% (تحسن)
+        appts:   { current: 82, last: 78, type: 'direct' },  // جودة: كانت 78% وصارت 82% (تحسن)
+        docs:    { current: 30, last: 35, type: 'direct' }   // اكتمال: كان 35% وصار 30% (تراجع)
+    };
+
+    function toggleSim(element, points, type) {
         // Toggle UI
         element.classList.toggle('active');
         const isActive = element.classList.contains('active');
         
-        // Calculate Logic
+        // حساب النقاط الرئيسية
         if (isActive) {
             currentScore += points;
         } else {
             currentScore -= points;
         }
-
-        // Cap score
         if (currentScore > 100) currentScore = 100;
 
-        // Update Gauge
+        // تحديث قيم المقاييس الفرعية بناء على الاختيار
+        updateMetricState(type, isActive);
+
+        // تحديث الواجهة
         updateGauge(currentScore);
+        renderMetrics();
+        updateAiInsights(currentScore);
+    }
+
+    function updateMetricState(type, isActive) {
+        const improvement = isActive ? 1 : -1;
         
-        // Update Delta Text
-        const delta = currentScore - baseScore;
+        if (type === 'traffic') {
+            // سداد المخالفات يقلل المخاطر بشكل كبير
+            metricsState.traffic.current -= (40 * improvement); 
+        } else if (type === 'docs') {
+            // تحديث الوثائق يرفع نسبة الاكتمال
+            metricsState.docs.current += (50 * improvement);
+        } else if (type === 'appts') {
+            // حجز المواعيد يرفع الجودة قليلاً
+            metricsState.appts.current += (10 * improvement);
+        }
+    }
+
+    function renderMetrics() {
+        renderSingleMetric('traffic', 'metric-traffic-val', 'metric-traffic-comp');
+        renderSingleMetric('appts', 'metric-appts-val', 'metric-appts-comp');
+        renderSingleMetric('docs', 'metric-docs-val', 'metric-docs-comp');
+    }
+
+    function renderSingleMetric(key, valId, compId) {
+        const m = metricsState[key];
+        const valEl = document.getElementById(valId);
+        const compEl = document.getElementById(compId);
+
+        // عرض النسبة الحالية
+        valEl.textContent = m.current + '%';
+        
+        // تلوين القيمة (أخضر/أصفر/برتقالي)
+        if (m.type === 'inverse') {
+            valEl.style.color = m.current > 50 ? '#facc15' : '#22c55e'; 
+        } else {
+            valEl.style.color = m.current < 50 ? '#f97316' : '#22c55e'; 
+        }
+
+        // حساب المقارنة مع الشهر الماضي
+        const diff = m.current - m.last;
+        let isImproved = false;
+
+        if (m.type === 'inverse') {
+            isImproved = diff < 0; // للمخاطر: النقصان هو تحسن
+        } else {
+            isImproved = diff > 0; // للجودة: الزيادة هي تحسن
+        }
+
+        if (diff === 0) {
+            compEl.innerHTML = `<span style="color:#94a3b8">- ثابت</span>`;
+        } else {
+            const arrow = isImproved ? '▲' : '▼'; 
+            const colorClass = isImproved ? 'comp-up' : 'comp-down';
+            compEl.innerHTML = `<span class="${colorClass}">${arrow} ${Math.abs(diff)}%</span> <span style="color:#64748b; font-weight:normal">عن الشهر الماضي</span>`;
+        }
+    }
+
+    function updateAiInsights(score) {
+        const delta = score - baseScore;
         const deltaEl = document.getElementById('score-delta');
         
         if (delta > 0) {
             deltaEl.textContent = `+${delta} تحسن`;
             deltaEl.className = "score-delta visible pos";
             
-            // Update AI Text contextually
             document.getElementById('ai-success-msg').style.display = "inline";
             document.getElementById('ai-title').textContent = "تحديث التوقعات";
             document.getElementById('ai-title').style.color = "#22c55e";
         } else {
-            deltaEl.className = "score-delta"; // hide
+            deltaEl.className = "score-delta"; 
             document.getElementById('ai-success-msg').style.display = "none";
             document.getElementById('ai-title').textContent = "تحليل المخاطر المترابطة";
             document.getElementById('ai-title').style.color = "#c4b5fd";
@@ -367,19 +439,15 @@
     function updateGauge(score) {
         const fill = document.getElementById('gauge-fill');
         const num = document.getElementById('score-num');
-        
-        // Update number
         num.textContent = score;
-
-        // Update graphic (conic gradient)
-        // 65% means 234 degrees
         const deg = (score / 100) * 360;
         fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
     }
 
-    // Init
+    // تشغيل عند التحميل
     document.addEventListener("DOMContentLoaded", () => {
         updateGauge(baseScore);
+        renderMetrics();
     });
   </script>
 </body>
