@@ -65,4 +65,321 @@
       border-radius: var(--radius);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      padding: 20px 20px 24px
+      padding: 20px 20px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* AI Header Effect */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset-inline-end: -80px;
+      inset-block-start: -90px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 65%);
+      pointer-events: none;
+      animation: pulse 4s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    .top-row {
+      display: flex; flex-wrap: wrap; align-items: flex-start;
+      justify-content: space-between; gap: 10px; margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .title-block { max-width: 70%; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;}
+    .ai-badge {
+        background: var(--ai-gradient); color: white; padding: 2px 8px;
+        border-radius: 6px; font-size: 10px; font-weight: normal; letter-spacing: 0.5px;
+    }
+    .page-sub { font-size: 12px; color: var(--text-sub); line-height: 1.5; }
+    .page-sub strong { color: #8b5cf6; }
+
+    /* Layout Grid */
+    .layout {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 950px) { .layout { grid-template-columns: 1fr; } }
+
+    /* --- Sidebar (Simulation) --- */
+    .sim-card {
+      background: #0f172a;
+      border-radius: 18px;
+      border: 1px solid #1e293b;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .sim-header { margin-bottom: 4px; }
+    .sim-title { font-size: 14px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 6px; }
+    .sim-desc { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+    .sim-action-group { display: flex; flex-direction: column; gap: 10px; }
+    .sim-item {
+        background: #1e293b; border: 1px solid #334155;
+        padding: 10px; border-radius: 12px;
+        transition: all 0.2s ease; cursor: pointer;
+        display: flex; align-items: flex-start; gap: 10px;
+    }
+    .sim-item:hover { border-color: #8b5cf6; background: #1e293b; }
+    .sim-item.active { background: rgba(34, 197, 94, 0.1); border-color: var(--accent); }
+
+    .checkbox-custom {
+        width: 18px; height: 18px; border-radius: 5px;
+        border: 2px solid #475569; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; margin-top: 2px;
+    }
+    .sim-item.active .checkbox-custom { background: var(--accent); border-color: var(--accent); }
+    .sim-item.active .checkbox-custom::after { content: "✔"; color: #020617; font-size: 12px; font-weight: bold; }
+
+    .sim-content { flex: 1; }
+    .sim-name { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+    .sim-impact { font-size: 10px; color: var(--accent); margin-top: 2px; display: block; }
+    .sim-impact.negative { color: #f97316; }
+
+    /* --- Main Gauge Area --- */
+    .gauge-card {
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid #111827;
+      padding: 20px;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative;
+    }
+
+    /* AI Insight Box */
+    .ai-insight-box {
+        width: 100%;
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 20px;
+        display: flex; gap: 10px; align-items: flex-start;
+    }
+    .ai-icon { font-size: 18px; }
+    .ai-text h4 { margin: 0 0 4px 0; font-size: 13px; color: #c4b5fd; }
+    .ai-text p { margin: 0; font-size: 11px; color: #ddd6fe; line-height: 1.4; }
+
+    .gauge-wrapper { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
+    .gauge-bg {
+        width: 100%; height: 100%; border-radius: 50%;
+        background: conic-gradient(#1e293b 0deg 360deg);
+        position: absolute; z-index: 1;
+    }
+    .gauge-fill {
+        width: 100%; height: 100%; border-radius: 50%;
+        background: conic-gradient(var(--accent) 0deg, transparent 0deg);
+        position: absolute; z-index: 2;
+        transition: background 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gauge-inner {
+        width: 200px; height: 200px; background: #020617;
+        border-radius: 50%; position: absolute; z-index: 3;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .score-display { font-size: 56px; font-weight: 800; color: #fff; line-height: 1; }
+    .score-label { font-size: 13px; color: #94a3b8; margin-top: 5px; }
+    .score-delta {
+        font-size: 14px; font-weight: bold; height: 20px;
+        opacity: 0; transform: translateY(10px); transition: all 0.3s ease;
+    }
+    .score-delta.visible { opacity: 1; transform: translateY(0); }
+    .score-delta.pos { color: var(--accent); }
+
+    /* Metric Styles */
+    .metrics-row {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-top: 24px;
+    }
+    .metric-box {
+        background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .m-val { font-size: 18px; font-weight: 700; color: #fff; direction: ltr; } /* LTR for numbers */
+    .m-lbl { font-size: 10px; color: #64748b; margin-top: 4px; }
+
+    /* Comparison Arrow Styles */
+    .m-comp {
+        font-size: 10px; font-weight: bold; margin-top: 6px;
+        display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .comp-up { color: #22c55e; }
+    .comp-down { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="header-icon">
+        <img src="/creative-logo.jpg" alt="شعار" class="logo-img" />
+      </div>
+      <div>
+        <div class="header-title-main">مؤشر التزامك</div>
+        <div class="header-title-sub">نسخة الهاكثون التجريبية</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html">الرئيسية</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="card">
+      <div class="top-row">
+        <div class="title-block">
+          <div class="page-title">
+            تحليل الوضع الراهن
+            <span class="ai-badge">AI Analysis</span>
+          </div>
+          <div class="page-sub">
+            يقوم النظام بتحليل <strong>سلوكك السابق</strong> والتنبؤ بالمخاطر المستقبلية،
+            وليس فقط عرض تواريخ الانتهاء.
+          </div>
+        </div>
+      </div>
+
+      <div class="layout">
+
+        <aside class="sim-card">
+            <div class="sim-header">
+                <div class="sim-title">
+                    <span>⚡</span> مدرب التزامك الرقمي
+                </div>
+                <div class="sim-desc">
+                    جرّب تفعيل هذه الإجراءات لترى كيف يتوقع الذكاء الاصطناعي تحسن تقييمك ومخاطرك.
+                </div>
+            </div>
+
+            <div class="sim-action-group">
+                <div class="sim-item" onclick="toggleSim(this, 7, 'traffic')">
+                    <div class="checkbox-custom"></div>
+                    <div class="sim-content">
+                        <div class="sim-name">المخالفات المرورية</div>
+                        <span class="sim-impact">+7 نقاط في المؤشر</span>
+                    </div>
+                </div>
+
+                <div class="sim-item" onclick="toggleSim(this, 5, 'docs')">
+                    <div class="checkbox-custom"></div>
+                    <div class="sim-content">
+                        <div class="sim-name">تجديد الوثائق</div>
+                        <span class="sim-impact">+5 نقاط في المؤشر</span>
+                    </div>
+                </div>
+
+                <div class="sim-item" onclick="toggleSim(this, 3, 'appts')">
+                    <div class="checkbox-custom"></div>
+                    <div class="sim-content">
+                        <div class="sim-name">المواعيد الحكومية</div>
+                        <span class="sim-impact">+3 نقاط (وقائي)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:auto; font-size:10px; color:#64748b; text-align:center;">
+                * المحاكاة تعتمد على نموذج تنبؤ بالمخاطر
+            </div>
+        </aside>
+
+        <div class="gauge-card">
+
+            <div class="ai-insight-box">
+                <div class="ai-icon">🧠</div>
+                <div class="ai-text">
+                    <h4 id="ai-title">تحليل المخاطر المترابطة</h4>
+                    <p id="ai-desc">
+                        رصدنا نمط "تأجيل" في سداد المخالفات المرورية. الاستمرار بهذا النمط قد يؤدي لإيقاف خدمات بنكية خلال 45 يوم.
+                        <br><span style="color:#22c55e; display:none;" id="ai-success-msg">ممتاز! الإجراءات المختارة تخفف هذا الخطر بنسبة 85%.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="gauge-wrapper">
+                <div class="gauge-bg"></div>
+                <div class="gauge-fill" id="gauge-fill"></div>
+                <div class="gauge-inner">
+                    <div class="score-delta" id="score-delta">+0</div>
+                    <div class="score-display" id="score-num">0</div>
+                    <div class="score-label">درجة الالتزام</div>
+                </div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="m-val" id="metric-traffic-val">--%</div>
+                    <div class="m-lbl">مخاطر المرور</div>
+                    <div class="m-comp" id="metric-traffic-comp"></div>
+                </div>
+                <div class="metric-box">
+                    <div class="m-val" id="metric-appts-val">--%</div>
+                    <div class="m-lbl">جودة المواعيد</div>
+                    <div class="m-comp" id="metric-appts-comp"></div>
+                </div>
+                <div class="metric-box">
+                    <div class="m-val" id="metric-docs-val">--%</div>
+                    <div class="m-lbl">اكتمال الوثائق</div>
+                    <div class="m-comp" id="metric-docs-comp"></div>
+                </div>
+            </div>
+
+            <!-- (تعديل 1) خانة: كيف تغيّر التزامك عن الشهر الماضي؟ -->
+            <div class="metric-box" style="width:100%; margin-top:12px; text-align:right;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <div>
+                  <div style="font-size:12px; font-weight:700; color:#e2e8f0;">كيف تغيّر التزامك عن الشهر الماضي؟</div>
+                  <div style="font-size:10px; color:#64748b; margin-top:3px;">مقارنة تلقائية (تجريبية) مع الشهر الماضي</div>
+                </div>
+                <div id="mom-badge" style="font-size:12px; font-weight:800; direction:ltr;">--</div>
+              </div>
+              <div id="mom-detail" style="margin-top:8px; font-size:10px; color:#94a3b8;">--</div>
+            </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const baseScore = 65;
+    let currentScore = baseScore;
+
+    // (تعديل 1) قيمة الشهر الماضي (تجريبية) للمقارنة
+    const lastMonthScore = 58;
+
+    // حالة المقاييس: النسبة الحالية والسابقة
+    // type: 'inverse' يعني (المخاطر) كل ما قلت النسبة كان أفضل
+    // type: 'direct' يعني (الجودة) كل ما زادت النسبة كان أفضل
+    const metricsState = {
+        traffic: { current: 65, last: 75, type: 'inverse' }, // تحسن لأن المخاطر قلت
+        appts:   { current: 82, last: 78, type: 'direct' },  // تحسن
+        docs:    { current: 30, last: 35, type: 'direct' }   // تراجع
+    };
+
+    // ===== (تعديل 2) أنيميشن المؤشر من رقم إلى رقم =====
+    let displayedScore = 0;
+    function setGaugeInstant(score) {
+      const fill = document.getElementById('gauge-fill');
+      const num = document.getElementById('score-num');
+      num.textContent = score;
+      const deg = (score / 100) * 360;
+      fill.style.background = `conic-gradient(#22c55e 0deg ${deg}deg, transparent ${deg}deg)`;
+    }
+
+    function animateGauge(from, to, duration = 900) {
+      const fill = document.getElementById('gauge-fill');
+      const originalTransition = fill.style.transition;
+      // نوقف transition أثناء الأنيميشن عشان ما يخرب الحركة
+      fill.style.transition = 'none';
+
+      const start = performance.now();
+      const delta = to - from;
+
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+        const value = Math.round(from
